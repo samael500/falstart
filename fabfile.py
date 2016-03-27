@@ -65,6 +65,12 @@ def start_box():
         run('vagrant up')
 
 
+def reprovision():
+    read_data()
+    with cd(VARS['root_dir']):
+        run('vagrant provision')
+
+
 def rmproj():
     """ Remove project """
     read_data()
