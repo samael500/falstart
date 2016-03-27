@@ -55,5 +55,9 @@ def start_box():
 
 
 def rmproj():
+    """ Remove project """
     read_data()
+    with cd(VARS['root_dir']):
+        run('vagrant destroy')
+
     run('rm {root_dir} -rf'.format(**VARS))
