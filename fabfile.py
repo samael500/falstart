@@ -47,7 +47,12 @@ def start_box():
     run('mkdir -p {root_dir}'.format(**VARS))
     with cd(VARS['root_dir']):
         render_template('Vagrantfile.j2', 'Vagrantfile')
+        # make provisioning folder
+        run('mkdir -p provision')
+        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
+        # run vagrant up
         run('vagrant up')
+
 
 def rmproj():
     read_data()

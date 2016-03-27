@@ -1,0 +1,56 @@
+import os
+import fabric
+
+from fabric.api import run, sudo, cd
+
+fabric.state.env.colorize_errors = True
+fabric.state.output['stdout'] = False
+
+# task const variables
+VARS = dict(
+    current_user=fabric.state.env.user,
+    # project settings
+    project_name='{{ proj_name }}',
+    project_dir_name='{{ proj_name }}',
+    user_data=dict(
+        email='root@e.co',
+        name='tmp user',
+        password='123123'
+    ),
+    # dirs configs
+    templates_dir='./provision/templates',
+    root_dir='/home/vagrant/proj',
+    venv_path='/home/vagrant/venv',
+    base_dir='/home/vagrant',
+    # nginx config
+    http_host='{{ proj_ip }}',
+    http_port='80',
+    # database config
+)
+
+
+def common():
+    """ Common tasks """
+    apt_packages()
+    python3_packages()
+
+
+def nginx():
+    """ Install nginx tasks """
+    pass
+
+def database():
+    """ Install database """
+    pass
+
+def apt_packages():
+    """ Install common packages """
+    pass
+
+def python3_packages():
+    """ Install python3 components """
+    pass
+
+def app():
+    """ Run application tasks """
+    pass
