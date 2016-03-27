@@ -2,7 +2,7 @@ import os
 import sys
 import fabric
 
-from fabric.api import run, sudo, cd
+from fabric.api import run, sudo, cd, put
 
 
 fabric.state.env.colorize_errors = True
@@ -15,12 +15,20 @@ VARS = dict(
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
 
+
 def render_template(template_name, remote_name):
     fabric.contrib.files.upload_template(
         template_name, remote_name,
         context=VARS, use_jinja=True,
         backup=False, use_sudo=False, template_dir=VARS['templates_dir']
     )
+
+
+def put_template(template_name, remote_path):
+    path = os.path.join(VARS['templates_dir'], template_name)
+    run('mkdir -p {}'.format(os.path.dirname(remote_path)))
+    put(path, remote_path)
+
 
 def common():
     read_data()
@@ -50,6 +58,9 @@ def start_box():
         # make provisioning folder
         run('mkdir -p provision')
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
+        # copy templates for vagrant fabric render
+        put_template('nginx-host.j2', 'provision/templates/nginx-host.j2')
+
         # run vagrant up
         run('vagrant up')
 
