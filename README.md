@@ -6,9 +6,11 @@ fast start develop box template
 $ fab -f ./falstart/fabfile.py --host='localhost' --user=username --password=supersecret common
 ```
 
-Troubleshooting
+##Example
 
-If you hav an arror like this:
+##Troubleshooting
+
+If you hav an error like this:
 ```
 Fatal error: Low level socket error connecting to host localhost on port 22: Connection refused (tried 1 time)
 
