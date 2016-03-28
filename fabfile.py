@@ -60,16 +60,19 @@ def start_box():
     with cd(VARS['root_dir']):
         render_template('Vagrantfile.j2', 'Vagrantfile')
         render_template('Makefile.j2', 'Makefile')
+        run('chmod +x Makefile')
         # make provisioning folder
         run('mkdir -p provision')
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
+        render_template('requirements.j2', 'requirements.txt')
+        render_template('requirements.j2', 'requirements-remote.txt')
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
         run('mkdir -p {}'.format('provision/templates'))
         put(path, 'provision')
         run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
-        run('vagrant up')
+        # run('vagrant up')
 
 
 def reprovision():
