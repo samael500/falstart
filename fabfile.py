@@ -65,9 +65,9 @@ def start_box():
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
-        remote_path = 'provision/templates'
         run('mkdir -p {}'.format('provision/templates'))
-        put(path, remote_path)
+        put(path, 'provision')
+        run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
         run('vagrant up')
 
