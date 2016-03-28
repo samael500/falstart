@@ -1,7 +1,9 @@
 import os
 import sys
-import fabric
+import string
+import random
 
+import fabric
 from fabric.api import run, sudo, cd, put
 
 
@@ -16,6 +18,10 @@ VARS = dict(
 )
 
 
+def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
 def render_template(template_name, remote_name):
     fabric.contrib.files.upload_template(
         template_name, remote_name,
@@ -24,15 +30,10 @@ def render_template(template_name, remote_name):
     )
 
 
-def put_template(template_name, remote_path):
-    path = os.path.join(VARS['templates_dir'], template_name)
-    run('mkdir -p {}'.format(os.path.dirname(remote_path)))
-    put(path, remote_path)
-
-
 def common():
     read_data()
     start_box()
+
 
 def read_data():
     from settings import settings
@@ -47,6 +48,9 @@ def read_data():
     if 'box_name' not in VARS:
         VARS['box_name'] = raw_input('box name: ')
 
+    if 'db_pass' not in VARS:
+        VARS['db_pass'] = str_random()
+
     VARS['root_dir'] = os.path.join(VARS['base_path'], VARS['proj_name'])
 
 
@@ -55,12 +59,15 @@ def start_box():
     run('mkdir -p {root_dir}'.format(**VARS))
     with cd(VARS['root_dir']):
         render_template('Vagrantfile.j2', 'Vagrantfile')
+        render_template('Makefile.j2', 'Makefile')
         # make provisioning folder
         run('mkdir -p provision')
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
         # copy templates for vagrant fabric render
-        put_template('nginx-host.j2', 'provision/templates/nginx-host.j2')
-
+        path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
+        remote_path = 'provision/templates'
+        run('mkdir -p {}'.format('provision/templates'))
+        put(path, remote_path)
         # run vagrant up
         run('vagrant up')
 
