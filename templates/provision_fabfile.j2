@@ -26,11 +26,14 @@ VARS = dict(
     http_host='{{ proj_ip }}',
     http_port='80',
     # database config
+    db_password='{{ db_pass }}',
+    db_user='{{ db_user }}',
 )
 
 
 def common():
     """ Common tasks """
+    locale()
     apt_packages()
     python3_packages()
 
@@ -51,11 +54,26 @@ def nginx():
 
 def database():
     """ Install database """
-    pass
+    # install postgres apt
+    sudo('apt-get -y install postgresql postgresql-server-dev-all python-psycopg2')
+    # make postgers password
+    sudo('-u postgres psql -c "ALTER USER {db_user} WITH PASSWORD \'{db_password}\';"'.format(**VARS))
+
+
+def locale():
+    """ Set locale to enviroment """
+    fabric.contrib.files.upload_template(
+        'locale.gen.j2', '/etc/locale.gen',
+        context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
+    fabric.contrib.files.upload_template(
+        'environment.j2', '/etc/environment',
+        context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
+    run('locale-gen')
 
 def apt_packages():
     """ Install common packages """
-    pass
+    sudo('apt-get -y update')
+    sudo('apt-get -y install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git')
 
 def python3_packages():
     """ Install python3 components """
