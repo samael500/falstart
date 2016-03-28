@@ -1,0 +1,16 @@
+# Local settings
+
+# Turn debug mode on
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+# Database connection
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '{{ proj_name }}',
+        'USER': '{{ db_user }}',
+        'PASSWORD': '{{ db_pass }}',
+        'HOST': '127.0.0.1',
+    }
+}

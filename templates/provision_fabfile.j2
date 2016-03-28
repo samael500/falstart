@@ -173,14 +173,6 @@ def start_app():
     with fabric.context_managers.settings(warn_only=True):
         run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
 
-    fabric.contrib.files.upload_template(
-        'settings_local.j2', '{project_name}/settings_local.py.example'.format(**VARS),
-        context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
-
-    fabric.contrib.files.upload_template(
-        'settings_local.j2', '{project_name}/settings_local.py.example'.format(**VARS),
-        context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
-
     with open('{project_name}/settings.py'.format(**VARS), 'r') as settings_file:
         settings = settings_file.read()
 

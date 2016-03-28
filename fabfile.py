@@ -13,6 +13,7 @@ fabric.state.env.colorize_errors = True
 sys.path.insert(0, os.path.dirname(__file__))
 
 VARS = dict(
+    init_app=True,
     base_path=os.getcwd(),
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
@@ -66,13 +67,17 @@ def start_box():
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
         render_template('requirements.j2', 'requirements.txt')
         render_template('requirements.j2', 'requirements-remote.txt')
+        render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
         run('mkdir -p {}'.format('provision/templates'))
         put(path, 'provision')
         run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
-        # run('vagrant up')
+        run('vagrant up')
+        # replace template
+        VARS['init_app'] = False
+        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
 
 
 def reprovision():
