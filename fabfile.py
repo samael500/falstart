@@ -43,8 +43,12 @@ def read_data():
     if 'proj_ip' not in VARS:
         VARS['proj_ip'] = raw_input('project ip: ')
 
-    if 'proj_name' not in VARS:
-        VARS['proj_name'] = raw_input('project name: ')
+    while 'proj_name' not in VARS:
+        proj_name = raw_input('project name: ')
+        if proj_name.isalpha():
+            VARS['proj_name'] = proj_name
+        else:
+            print ('incorect name')
 
     if 'box_name' not in VARS:
         VARS['box_name'] = raw_input('box name: ')
