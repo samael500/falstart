@@ -24,6 +24,8 @@ def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.asc
 
 
 def render_template(template_name, remote_name):
+    if os.path.dirname(remote_name):
+        run('mkdir -p {}'.format(os.path.dirname(remote_name)))
     fabric.contrib.files.upload_template(
         template_name, remote_name,
         context=VARS, use_jinja=True,
@@ -49,6 +51,9 @@ def read_data():
             VARS['proj_name'] = proj_name
         else:
             print ('incorect name')
+
+    if 'db_user' not in VARS:
+        VARS['db_user'] = VARS['proj_name'] + '_user'
 
     if 'box_name' not in VARS:
         VARS['box_name'] = raw_input('box name: ')

@@ -121,7 +121,7 @@ def python3_packages():
         run('./configure --prefix=/usr/local/python-3.4.3')
         # compiling the python 3.4 source code and install
         sudo('make && make altinstall #')
-    run('rm /tmp/* -rf')
+    sudo('rm /tmp/* -rf')
     # make link to python
     sudo('ln -sf /usr/local/python-3.4.3/bin/* /usr/local/bin/')
 

@@ -43,8 +43,8 @@ Vagrant.configure(2) do |config|
   # Virtualbox specific parameters
   config.vm.provider "virtualbox" do |v|
     v.name = "#{hostname}_vagrant"
-    v.memory = 2048
-    v.cpus = 2
+    v.memory = {{ vagrant_memory }}
+    v.cpus = {{ vagrant_cpus }}
   end
   # Provisioning with Fabric
   config.vm.provision :fabric do |fabric|
