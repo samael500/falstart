@@ -14,15 +14,18 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 VARS = dict(
     init_app=True,
+    base_path=os.getcwd(),
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
 
 
 def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
+    """ Not a fabric task, it will generate random str for passw """
     return ''.join(random.choice(chars) for _ in range(size))
 
 
 def render_template(template_name, remote_name):
+    """ Render wrapper for simplify touch rendered template into target """
     if os.path.dirname(remote_name):
         run('mkdir -p {}'.format(os.path.dirname(remote_name)))
     fabric.contrib.files.upload_template(
@@ -32,7 +35,10 @@ def render_template(template_name, remote_name):
     )
 
 
-def common():
+def common(proj_name=None):
+    """ Run all common tasks """
+    if proj_name:
+        VARS['proj_name'] = proj_name
     read_data()
     start_box()
 
