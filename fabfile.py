@@ -14,7 +14,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 VARS = dict(
     init_app=True,
-    base_path=os.getcwd(),
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
 

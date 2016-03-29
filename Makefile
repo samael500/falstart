@@ -1,2 +1,2 @@
-falstart:
-	fab -f ./fabfile.py --host='localhost' common
+install:
+	ln -fs ./falstart.py /usr/local/bin/falstart
