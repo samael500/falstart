@@ -1,2 +1,2 @@
 install:
-	ln -fs ./falstart.py /usr/local/bin/falstart
+	ln -fs $(shell pwd)/falstart.py /usr/local/bin/falstart
