@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import subprocess
-
-from .settings import settings
 
 
 def run():
-    settings['base_path'] = os.getcwd()
-    subprocess.call(['fab', '-f', './fabfile.py', '--host=localhost', 'common'])
+    common = 'common'
+    if len(sys.argv) > 1:
+        common += ':{}'.format(sys.argv[1])
+    subprocess.call([
+        'fab', '-f', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'fabfile.py'),
+        '--host=localhost', common])
 
 
 if __name__ == '__main__':
