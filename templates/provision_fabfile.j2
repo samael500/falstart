@@ -159,8 +159,7 @@ def app():
         run('mkdir var -p')
 
         # Start runserver
-        run('make start')
-
+        run('make start', pty=False)
 {% if init_app %}
 
 def mk_wheel():
@@ -229,5 +228,4 @@ except ImportError:
 
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
-
 {% endif %}
