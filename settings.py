@@ -4,4 +4,6 @@ settings = dict(
 
     vagrant_memory=2048,
     vagrant_cpus=2,
+
+    POSTGRES=True,
 )

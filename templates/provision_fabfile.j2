@@ -70,7 +70,7 @@ def nginx():
 
 
 def database():
-    """ Install database """
+    """ Install database """{% if POSTGRES %}
     # install postgres apt
     sudo('apt-get -y install postgresql postgresql-server-dev-all python-psycopg2')
     # make postgers password
@@ -84,6 +84,7 @@ def database():
         )
         for command in commands:
             run('sudo -u postgres psql -c "%s"' % command.format(**VARS))
+    {% else %}pass{% endif %}
 
 
 def locale():
@@ -192,7 +193,7 @@ if __name__ in ['settings', '{project_name}.settings']:
     import sys
     sys.path.insert(0, join(BASE_DIR, '{project_name}'))
 '''.format(**VARS))
-
+{% if POSTGRES %}
     settings = settings.replace('''
 DATABASES = {
     'default': {
@@ -210,7 +211,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
     }
 }''' % VARS)
-
+{% endif %}
     if 'STATIC_ROOT' not in settings:
         settings = settings.replace('''
 STATIC_URL = '/static/'

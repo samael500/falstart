@@ -3,7 +3,7 @@
 # Turn debug mode on
 DEBUG = True
 TEMPLATE_DEBUG = True
-
+{% if POSTGRES %}
 # Database connection
 DATABASES = {
     'default': {
@@ -14,3 +14,4 @@ DATABASES = {
         'HOST': '127.0.0.1',
     }
 }
+{% endif %}
