@@ -37,15 +37,15 @@ def start_box():
     """ Create Vagrant file and up virtual machine """
     run('mkdir -p {root_dir}'.format(**VARS))
     with cd(VARS['root_dir']):
-        render_template('Vagrantfile.j2', 'Vagrantfile')
-        render_template('Makefile.j2', 'Makefile')
+        render_template('Vagrantfile.jinja', 'Vagrantfile')
+        render_template('Makefile.jinja', 'Makefile')
         run('chmod +x Makefile')
         # make provisioning folder
         run('mkdir -p provision')
-        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
-        render_template('requirements.j2', 'requirements.txt')
-        render_template('requirements.j2', 'requirements-remote.txt')
-        render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
+        render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
+        render_template('requirements.jinja', 'requirements.txt')
+        render_template('requirements.jinja', 'requirements-remote.txt')
+        render_template('settings_local.jinja', '{proj_name}/settings_local.py.example'.format(**VARS))
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
         run('mkdir -p {}'.format('provision/templates'))
@@ -55,7 +55,7 @@ def start_box():
         run('vagrant up')
         # replace template
         VARS['init_app'] = False
-        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
+        render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
 
 
 def reprovision():
