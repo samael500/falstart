@@ -3,7 +3,6 @@
 import json
 import re
 import os
-import sys
 import argparse
 import subprocess
 import string
@@ -49,28 +48,29 @@ def read_data(args):
     VARS.update(args)
     VARS['base_path'] = os.getcwd()
 
-    root_dir = VARS.get('root_dir', '')
-    proj_name = VARS.get('proj_name') or ''.join(re.split(r'[^a-z]', root_dir.lower()))
+    VARS['py_version'] = from_user(
+        'Python version\t', VARS.get('proj_ip', '3.4.3'), re.compile(r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$'))
+    VARS['pyenv_version'] = re.findall(r'^\d{1,2}\.\d{1,2}')[0]
+
+    proj_name = VARS.get('proj_name') or ''.join(re.split(r'[^a-z]', VARS.get('root_dir', '').lower()))
     VARS['proj_name'] = proj_name or from_user('Enter a project name', proj_name, re.compile(r'^[a-z0-9]+$'))
 
-    proj_ip = VARS.get('proj_ip', '10.1.1.123')
-    VARS['proj_ip'] = from_user('Vagrant box IP-addr\t', proj_ip, re.compile(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$'))
+    VARS['proj_ip'] = from_user(
+        'Vagrant box IP-addr\t', VARS.get('proj_ip', '10.1.1.123'), re.compile(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$'))
 
     for name in 'POSTGRES', 'CELERY', 'REDIS':
-        value = VARS.get(name, False)
         VARS[name] = from_user(
             'Do you nead a {} Y/n'.format(name) + ('\t' if name in ('REDIS', ) else ''),
-            value, re.compile(r'^[YyNn]{1}$'), yesno=True)
+            VARS.get(name, False), re.compile(r'^[YyNn]{1}$'), yesno=True)
 
     print ''
 
     for name in ('db_name', 'db_user', 'db_pass'):
-        value = VARS.get(name)
         default = '{proj_name}_{}'.format(['db', 'user'][name == 'db_user'], **VARS)
         if name == 'db_pass':
             default = str_random()
         VARS[name] = from_user(
-            'Database {}'.format(name).replace('db_', ''), value or default, re.compile(r'^\w+$'))
+            'Database {}'.format(name).replace('db_', ''), VARS.get(name) or default, re.compile(r'^\w+$'))
 
     VARS['root_dir'] = os.path.join(VARS['base_path'], VARS['root_dir'])
 
@@ -83,8 +83,6 @@ def parse():
         help='Non interactive config parse', default=False)
     return parser.parse_args().__dict__
 
-def presettings():
-    """ Call user to insert required settings """
 
 def main():
     read_data(parse())
