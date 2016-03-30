@@ -83,7 +83,8 @@ def database():
         )
         for command in commands:
             run('sudo -u postgres psql -c "%s"' % command.format(**VARS))
-    {% else %}pass{% endif %}
+    {% else %}
+    pass{% endif %}
 
 
 def locale():

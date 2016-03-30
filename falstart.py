@@ -50,11 +50,11 @@ def read_data(args):
     VARS['base_path'] = os.getcwd()
 
     root_dir = VARS.get('root_dir', '')
-    proj_name = VARS.get('proj_name') or ''.join(re.split(r'^[a-z]', root_dir.lower()))
+    proj_name = VARS.get('proj_name') or ''.join(re.split(r'[^a-z]', root_dir.lower()))
     VARS['proj_name'] = proj_name or from_user('Enter a project name', proj_name, re.compile(r'^[a-z0-9]+$'))
 
     proj_ip = VARS.get('proj_ip', '10.1.1.123')
-    VARS['proj_ip'] = from_user('Vagrant box IP-addr\t', proj_ip, re.compile(r'^([0-9]{1,3}\.){4}$'))
+    VARS['proj_ip'] = from_user('Vagrant box IP-addr\t', proj_ip, re.compile(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$'))
 
     for name in 'POSTGRES', 'CELERY', 'REDIS':
         value = VARS.get(name, False)
