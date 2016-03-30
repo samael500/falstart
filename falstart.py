@@ -31,7 +31,7 @@ def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.asc
 
 def from_user(msg, default, validate, yesno=False):
     """ Get value from user """
-    message = '> \033[1m{}\033[0m [{}] '.format(msg, ('y/N', 'Y/n')[default] if yesno else repr(default))
+    message = '\033[1m> {}\033[0m [{}] '.format(msg, ('y/N', 'Y/n')[default] if yesno else repr(default))
     validator = re.compile(validate)
     if VARS.get('no_input'):
         return default
@@ -43,7 +43,7 @@ def from_user(msg, default, validate, yesno=False):
             if yesno:
                 return value.lower() == 'y'
             return value
-        print '\033[1mIncorrect format\033[0m {}'.format(validate)
+        print '\033[31m\033[1m> Incorrect input format\033[0m\033[31m check regex r"{}"\033[0m'.format(validate)
 
 
 def read_data(args):
@@ -52,7 +52,7 @@ def read_data(args):
 
     proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
     VARS['proj_name'] = VARS.get('proj_name') or from_user(
-        'Enter a project name', proj_name, r'^[a-z0-9]+$')
+        'Enter a project name', proj_name, r'^[a-z]+([a-z]|\d)*$')
     if not VARS.get('root_dir'):
         VARS['root_dir'] = VARS['proj_name']
 
