@@ -46,6 +46,8 @@ def start_box():
         render_template('requirements.jinja', 'requirements.txt')
         render_template('requirements.jinja', 'requirements-remote.txt')
         render_template('settings_local.jinja', '{proj_name}/settings_local.py.example'.format(**VARS))
+        if VARS.get('CELERY'):
+            render_template('celery.jinja', '{proj_name}/celery.py'.format(**VARS))
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
         run('mkdir -p {}'.format('provision/templates'))
