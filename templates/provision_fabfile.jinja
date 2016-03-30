@@ -104,7 +104,7 @@ def locale():
 def apt_packages():
     """ Install common packages """
     sudo('apt-get -y update')
-    sudo('apt-get -y install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git{% if REDIS %} redis{% endif %}{% if CELERY and not REDIS %} rabbitmq-server{% endif %}')
+    sudo('apt-get -y install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git{% if REDIS %} redis-server{% endif %}{% if CELERY and not REDIS %} rabbitmq-server{% endif %}')
 
 
 @sentinel('python')
