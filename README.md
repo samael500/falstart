@@ -7,7 +7,6 @@ Pre Requirements
 
 - [Vagrant](https://www.vagrantup.com/downloads.html) && [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Fabric](https://github.com/fabric/fabric)
-- [Vagrant fabric plugin](https://github.com/wutali/vagrant-fabric)
 - ssh on localhost (`$ sudo apt-get install ssh`)
 
 Setup
@@ -23,6 +22,6 @@ Usage
 -----
 
 ```
-$ cd /your/proj/parend/dir
+$ cd /your/proj/parent/dir
 $ falstart awesomeprojname
 ```

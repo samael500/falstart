@@ -21,6 +21,7 @@ def vagrant_fabric():
     """ Check is vagrant fabric installed and if not - install """
     plugins = subprocess.check_output(['vagrant', 'plugin', 'list'])
     if 'vagrant-fabric' not in plugins:
+        # https://github.com/wutali/vagrant-fabric
         subprocess.call(['vagrant', 'plugin', 'install', 'vagrant-fabric'])
 
 
