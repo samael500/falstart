@@ -1,7 +1,5 @@
 import os
-import sys
-import string
-import random
+import json
 
 import fabric
 from fabric.api import run, sudo, cd, put
@@ -10,18 +8,11 @@ from fabric.api import run, sudo, cd, put
 fabric.state.env.colorize_errors = True
 # fabric.state.output['stdout'] = False
 
-sys.path.insert(0, os.path.dirname(__file__))
 
 VARS = dict(
     init_app=True,
-    base_path=os.getcwd(),
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
-
-
-def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
-    """ Not a fabric task, it will generate random str for passw """
-    return ''.join(random.choice(chars) for _ in range(size))
 
 
 def render_template(template_name, remote_name):
@@ -35,38 +26,11 @@ def render_template(template_name, remote_name):
     )
 
 
-def common(proj_name=None):
+def common(taskname):
     """ Run all common tasks """
-    if proj_name:
-        VARS['proj_name'] = proj_name
-    read_data()
-    start_box()
-
-
-def read_data():
-    from settings import settings
-    VARS.update(settings)
-
-    if 'proj_ip' not in VARS:
-        VARS['proj_ip'] = raw_input('project ip: ')
-
-    while 'proj_name' not in VARS:
-        proj_name = raw_input('project name: ')
-        if proj_name.isalpha():
-            VARS['proj_name'] = proj_name
-        else:
-            print ('incorect name')
-
-    if 'db_user' not in VARS:
-        VARS['db_user'] = VARS['proj_name'] + '_user'
-
-    if 'box_name' not in VARS:
-        VARS['box_name'] = raw_input('box name: ')
-
-    if 'db_pass' not in VARS:
-        VARS['db_pass'] = str_random()
-
-    VARS['root_dir'] = os.path.join(VARS['base_path'], VARS['proj_name'])
+    config = json.load(open(os.path.join(os.path.dirname(__file__), 'cfg.json')))
+    VARS.update(config)
+    fabric.tasks.execute(taskname)
 
 
 def start_box():
@@ -95,14 +59,12 @@ def start_box():
 
 
 def reprovision():
-    read_data()
     with cd(VARS['root_dir']):
         run('vagrant provision')
 
 
 def rmproj():
     """ Remove project """
-    read_data()
     with cd(VARS['root_dir']):
         run('vagrant destroy')
 
