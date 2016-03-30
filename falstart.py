@@ -49,12 +49,15 @@ def read_data(args):
     VARS.update(args)
     VARS['base_path'] = os.getcwd()
 
+    proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
+    VARS['proj_name'] = VARS.get('proj_name') or from_user(
+        'Enter a project name', proj_name, re.compile(r'^[a-z0-9]+$'))
+    if not VARS.get('root_dir'):
+        VARS['root_dir'] = VARS['proj_name']
+
     VARS['py_version'] = from_user(
         'Python version', VARS.get('py_version', '3.4.3'), re.compile(r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$'))
     VARS['pyenv_version'] = re.findall(r'^\d{1,2}\.\d{1,2}', VARS.get('py_version'))[0]
-
-    proj_name = VARS.get('proj_name') or ''.join(re.split(r'[^a-z]', VARS.get('root_dir', '').lower()))
-    VARS['proj_name'] = proj_name or from_user('Enter a project name', proj_name, re.compile(r'^[a-z0-9]+$'))
 
     VARS['proj_ip'] = from_user(
         'Vagrant box IP-addr', VARS.get('proj_ip', '10.1.1.123'), re.compile(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$'))
