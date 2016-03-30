@@ -25,3 +25,13 @@ ci_test:
 
 wheel_install:
 	$(VENV_PATH)/pip install --no-index -f wheels/ -r requirements.txt
+{% if CELERY %}
+runcelery:
+	$(VENV_PATH)/celery -A {{ proj_name }} worker -l info -B -s ./var/celerybeat-schedule
+
+runcelery_multi:
+	$(VENV_PATH)/celery multi restart {{ proj_name }}_worker \
+		-A {{ proj_name }} -l info -B -s ./var/celerybeat-schedule \
+			--logfile="./var/celery_%n.log" \
+				--pidfile="./var/celery_%n.pid"
+{% endif %}
