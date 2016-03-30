@@ -32,17 +32,18 @@ def str_random(size=9, chars=string.ascii_uppercase + string.digits + string.asc
 def from_user(msg, default, validate, yesno=False):
     """ Get value from user """
     message = '> \033[1m{}\033[0m [{}] '.format(msg, ('y/N', 'Y/n')[default] if yesno else repr(default))
+    validator = re.compile(validate)
     if VARS.get('no_input'):
         return default
     while True:
         value = raw_input(message).strip()
         if not value and default is not None:
             return default
-        if re.match(validate, value):
+        if re.match(validator, value):
             if yesno:
                 return value.lower() == 'y'
             return value
-        print '\033[1mInvalide\033[0m'
+        print '\033[1mIncorrect format\033[0m {}'.format(validate)
 
 
 def read_data(args):
@@ -51,20 +52,20 @@ def read_data(args):
 
     proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
     VARS['proj_name'] = VARS.get('proj_name') or from_user(
-        'Enter a project name', proj_name, re.compile(r'^[a-z0-9]+$'))
+        'Enter a project name', proj_name, r'^[a-z0-9]+$')
     if not VARS.get('root_dir'):
         VARS['root_dir'] = VARS['proj_name']
 
     VARS['py_version'] = from_user(
-        'Python version', VARS.get('py_version', '3.4.3'), re.compile(r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$'))
+        'Python version', VARS.get('py_version', '3.4.3'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
     VARS['pyenv_version'] = re.findall(r'^\d{1,2}\.\d{1,2}', VARS.get('py_version'))[0]
 
     VARS['proj_ip'] = from_user(
-        'Vagrant box IP-addr', VARS.get('proj_ip', '10.1.1.123'), re.compile(r'^([0-9]{1,3}\.){3}[0-9]{1,3}$'))
+        'Vagrant box IP-addr', VARS.get('proj_ip', '10.1.1.123'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
 
     for name in 'POSTGRES', 'CELERY', 'REDIS':
         VARS[name] = from_user(
-            'Do you nead a {}?'.format(name), VARS.get(name, False), re.compile(r'^[YyNn]{1}$'), yesno=True)
+            'Do you nead a {}?'.format(name), VARS.get(name, False), r'^[YyNn]{1}$', yesno=True)
 
     if VARS.get('POSTGRES'):
         for name in ('db_name', 'db_user', 'db_pass'):
@@ -72,7 +73,7 @@ def read_data(args):
             if name == 'db_pass':
                 default = str_random()
             VARS[name] = from_user(
-                'Database {}'.format(name).replace('db_', ''), VARS.get(name) or default, re.compile(r'^\w+$'))
+                'Database {}'.format(name).replace('db_', ''), VARS.get(name) or default, r'^\w+$')
 
     VARS['root_dir'] = os.path.join(VARS['base_path'], VARS['root_dir'])
 
