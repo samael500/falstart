@@ -51,7 +51,7 @@ def common():
     """ Common tasks """
     locale()
     apt_packages()
-    python3_packages()
+    python_packages()
 
 
 def nginx():
@@ -102,9 +102,9 @@ def apt_packages():
     sudo('apt-get -y install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git')
 
 
-@sentinel('python3')
-def python3_packages():
-    """ Install python3 components """
+@sentinel('python')
+def python_packages():
+    """ Install python components """
 
     sudo(
         'apt-get -y install python-dev python-pip python-virtualenv build-essential '
@@ -113,26 +113,26 @@ def python3_packages():
 
     with cd('/tmp'):
         # download python source code
-        run('wget -O python.tgz https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz')
+        run('wget -O python.tgz https://www.python.org/ftp/python/{{ py_version }}/Python-{{ py_version }}.tgz')
         # extract python tarball
         run('tar -xf python.tgz')
-        run('mv Python-3.4.3 python')
+        run('mv Python-{{ py_version }} python')
 
     with cd('/tmp/python'):
         # configuring python 3.4 Makefile
-        run('./configure --prefix=/usr/local/python-3.4.3')
+        run('./configure --prefix=/usr/local/python-{{ py_version }}')
         # compiling the python 3.4 source code and install
         sudo('make && make altinstall #')
     sudo('rm /tmp/* -rf')
     # make link to python
-    sudo('ln -sf /usr/local/python-3.4.3/bin/* /usr/local/bin/')
+    sudo('ln -sf /usr/local/python-{{ py_version }}/bin/* /usr/local/bin/')
 
 
 def app():
     """ Run application tasks """
     with cd(VARS['root_dir']):
         # Create venv and install requirements
-        run('pyvenv-3.4 {venv_path}'.format(**VARS))
+        run('pyvenv-{{ pyenv_version }} {venv_path}'.format(**VARS))
         {% if init_app %}mk_wheel(){% endif %}
         # Install required python packages with pip from wheels archive
         run('make wheel_install')

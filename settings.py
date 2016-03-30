@@ -22,4 +22,8 @@ VARS = dict(
     # locale conf
     locale='ru_RU',
     encoding='UTF-8',
+
+    # python version
+    py_version='3.4.3',
+    pyenv_version=None,
 )
