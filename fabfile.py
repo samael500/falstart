@@ -58,6 +58,20 @@ def start_box():
         # replace template
         VARS['init_app'] = False
         render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
+    fabric.tasks.execute('falstart_commit')
+
+
+def falstart_commit():
+    """ Try to commit after box start """
+    with cd(VARS['root_dir']), fabric.context_managers.settings(warn_only=True):
+        run('''echo "
+# custome ignore
+settings_local.py
+.vagrant
+var/
+static/
+" >> .gitignore''')
+        run('git add . && git commit -m ":rocket: falstart init commit"')
 
 
 def reprovision():
