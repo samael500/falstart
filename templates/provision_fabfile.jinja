@@ -235,9 +235,9 @@ CELERY_ACCEPT_CONTENT = ['json', ]
 {% endif %}
 
 try:
-   from settings_local import *  # noqa
+    from settings_local import *  # noqa
 except ImportError:
-   pass
+    pass
 ''' % VARS)
 
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
@@ -250,3 +250,4 @@ except ImportError:
 from .celery import app as celery_app  # noqa
 ''')
 {% endif %}
+{# keep trailing newline #}
