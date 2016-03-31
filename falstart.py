@@ -57,9 +57,19 @@ def read_data(args):
     if not VARS.get('root_dir'):
         VARS['root_dir'] = VARS['proj_name']
 
-    VARS['py_version'] = from_user(
-        'Python version', VARS.get('py_version', '3.4.3'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
-    VARS['pyenv_version'] = re.findall(r'^\d{1,2}\.\d{1,2}', VARS.get('py_version'))[0]
+    while True:
+        py_version = from_user(
+            'Python version', VARS.get('py_version', '3.4.3'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
+
+        if subprocess.check_output([
+                'curl', '-sL', 'https://www.python.org/ftp/python/{py_version}/'.format(py_version=py_version),
+                '-w', '%{http_code}', '-o', '/dev/null']) == '200':
+
+            VARS.update(dict(py_version=py_version, pyenv_version=re.findall(r'^\d{1,2}\.\d{1,2}', py_version)[0]))
+            break
+        print (
+            '\033[31m\033[1m> Python version "{py_version}" not available\033[0m\033[31m '
+            'check uri https://www.python.org/ftp/python/\033[0m').format(py_version=py_version)
 
     VARS['proj_ip'] = from_user(
         'Vagrant box IP-addr', VARS.get('proj_ip', '10.1.1.123'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
