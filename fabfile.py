@@ -11,6 +11,7 @@ fabric.state.env.colorize_errors = True
 
 VARS = dict(
     init_app=True,
+    custome_box=False,
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
 
@@ -54,7 +55,7 @@ def start_box():
         put(path, 'provision')
         run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
-        run('vagrant up')
+        # run('vagrant up')
         # replace template
         VARS['init_app'] = False
         render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
@@ -74,9 +75,22 @@ static/
         run('git add . && git commit -m ":rocket: falstart init commit"')
 
 
-def reprovision():
+def make_custome_box():
     with cd(VARS['root_dir']):
-        run('vagrant provision')
+        VARS['custome_box'] = True
+        run('vagrant destroy -f')
+        # render templates to no provide app and syncfolder
+        render_template('Vagrantfile.jinja', 'Vagrantfile')
+        run('vagrant up')
+        for cmd in (
+                'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
+                'cat /dev/null > ~/.bash_history && history -c'):
+            run('vagrant ssh -c {cmd}')
+        # make custome box
+        run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
+        # return template to back
+        VARS['custome_box'] = False
+        render_template('Vagrantfile.jinja', 'Vagrantfile')
 
 
 def rmproj():
