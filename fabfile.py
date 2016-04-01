@@ -38,17 +38,17 @@ def start_box():
     """ Create Vagrant file and up virtual machine """
     run('mkdir -p {root_dir}'.format(**VARS))
     with cd(VARS['root_dir']):
-        render_template('Vagrantfile.jinja', 'Vagrantfile')
-        render_template('Makefile.jinja', 'Makefile')
+        render_template('Vagrantfile.j2', 'Vagrantfile')
+        render_template('Makefile.j2', 'Makefile')
         run('chmod +x Makefile')
         # make provisioning folder
         run('mkdir -p provision')
-        render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
-        render_template('requirements.jinja', 'requirements.txt')
-        render_template('requirements.jinja', 'requirements-remote.txt')
-        render_template('settings_local.jinja', '{proj_name}/settings_local.py.example'.format(**VARS))
+        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
+        render_template('requirements.j2', 'requirements.txt')
+        render_template('requirements.j2', 'requirements-remote.txt')
+        render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
         if VARS.get('CELERY'):
-            render_template('celery.jinja', '{proj_name}/celery.py'.format(**VARS))
+            render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
         run('mkdir -p {}'.format('provision/templates'))
@@ -58,7 +58,7 @@ def start_box():
         # run('vagrant up')
         # replace template
         VARS['init_app'] = False
-        render_template('provision_fabfile.jinja', 'provision/fabric_provisioner.py')
+        render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
     fabric.tasks.execute('falstart_commit')
 
 
@@ -80,7 +80,7 @@ def make_custome_box():
         VARS['custome_box'] = True
         run('vagrant destroy -f')
         # render templates to no provide app and syncfolder
-        render_template('Vagrantfile.jinja', 'Vagrantfile')
+        render_template('Vagrantfile.j2', 'Vagrantfile')
         run('vagrant up')
         for cmd in (
                 'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
@@ -90,7 +90,7 @@ def make_custome_box():
         run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
         # return template to back
         VARS['custome_box'] = False
-        render_template('Vagrantfile.jinja', 'Vagrantfile')
+        render_template('Vagrantfile.j2', 'Vagrantfile')
 
 
 def rmproj():
