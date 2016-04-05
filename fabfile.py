@@ -2,7 +2,8 @@ import os
 import json
 
 import fabric
-from fabric.api import run, sudo, cd, put
+from fabric.api import run, sudo, cd, put, local, lcd
+from jinja2 import Environment, FileSystemLoader
 
 
 fabric.state.env.colorize_errors = True
@@ -19,12 +20,13 @@ VARS = dict(
 def render_template(template_name, remote_name):
     """ Render wrapper for simplify touch rendered template into target """
     if os.path.dirname(remote_name):
-        run('mkdir -p {}'.format(os.path.dirname(remote_name)))
-    fabric.contrib.files.upload_template(
-        template_name, remote_name,
-        context=VARS, use_jinja=True,
-        backup=False, use_sudo=False, template_dir=VARS['templates_dir']
-    )
+        local('mkdir -p {}'.format(os.path.dirname(remote_name)))
+    loader = FileSystemLoader(VARS['templates_dir'])
+    jinja_env = Environment(loader=loader)
+    template = jinja_env.get_template(template_name)
+    template.render(**VARS)
+    with open(os.path.join(fabric.state.env.lcwd, remote_name), 'w') as target_file:
+        target_file.write(template.render(**VARS))
 
 
 def common(taskname):
@@ -36,13 +38,13 @@ def common(taskname):
 
 def start_box():
     """ Create Vagrant file and up virtual machine """
-    run('mkdir -p {root_dir}'.format(**VARS))
-    with cd(VARS['root_dir']):
+    local('mkdir -p {root_dir}'.format(**VARS))
+    with lcd(VARS['root_dir']), cd(VARS['root_dir']):
         render_template('Vagrantfile.j2', 'Vagrantfile')
         render_template('Makefile.j2', 'Makefile')
-        run('chmod +x Makefile')
+        local('chmod +x Makefile')
         # make provisioning folder
-        run('mkdir -p provision')
+        local('mkdir -p provision')
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
         render_template('requirements.j2', 'requirements.txt')
         render_template('requirements.j2', 'requirements-remote.txt')
@@ -51,11 +53,11 @@ def start_box():
             render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
         # copy templates for vagrant fabric render
         path = os.path.join(VARS['templates_dir'], 'vagrant_templates')
-        run('mkdir -p {}'.format('provision/templates'))
+        local('mkdir -p {}'.format('provision/templates'))
         put(path, 'provision')
-        run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
+        local('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
-        # run('vagrant up')
+        local('vagrant up')
         # replace template
         VARS['init_app'] = False
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
@@ -64,30 +66,30 @@ def start_box():
 
 def falstart_commit():
     """ Try to commit after box start """
-    with cd(VARS['root_dir']), fabric.context_managers.settings(warn_only=True):
-        run('''echo "
+    with lcd(VARS['root_dir']), fabric.context_managers.settings(warn_only=True):
+        local('''echo "
 # custome ignore
 settings_local.py
 .vagrant
 var/
 static/
 " >> .gitignore''')
-        run('git add . && git commit -m ":rocket: falstart init commit"')
+        local('git add . && git commit -m ":rocket: falstart init commit"')
 
 
 def make_custome_box():
-    with cd(VARS['root_dir']):
+    with lcd(VARS['root_dir']):
         VARS['custome_box'] = True
-        run('vagrant destroy -f')
+        local('vagrant destroy -f')
         # render templates to no provide app and syncfolder
         render_template('Vagrantfile.j2', 'Vagrantfile')
-        run('vagrant up')
+        local('vagrant up')
         for cmd in (
                 'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
                 'cat /dev/null > ~/.bash_history && history -c'):
-            run('vagrant ssh -c {cmd}')
+            local('vagrant ssh -c {cmd}')
         # make custome box
-        run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
+        local('vagrant package --output ~/{proj_name}.box'.format(**VARS))
         # return template to back
         VARS['custome_box'] = False
         render_template('Vagrantfile.j2', 'Vagrantfile')
@@ -95,7 +97,7 @@ def make_custome_box():
 
 def rmproj():
     """ Remove project """
-    with cd(VARS['root_dir']):
-        run('vagrant destroy')
+    with lcd(VARS['root_dir']):
+        local('vagrant destroy')
 
-    run('rm {root_dir} -rf'.format(**VARS))
+    local('rm {root_dir} -rf'.format(**VARS))
