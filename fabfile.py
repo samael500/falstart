@@ -55,7 +55,7 @@ def start_box():
         put(path, 'provision')
         run('rm -rf provision/templates && mv -f provision/vagrant_templates provision/templates')
         # run vagrant up
-        # run('vagrant up')
+        run('vagrant up')
         # replace template
         VARS['init_app'] = False
         render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
