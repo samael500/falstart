@@ -25,3 +25,5 @@ Usage
 $ cd /your/proj/parent/dir
 $ falstart awesomeprojname
 ```
+
+![falstart example](example.gif)

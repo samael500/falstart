@@ -24,6 +24,7 @@ VARS = dict(
     encoding='UTF-8',
 
     # python version
-    py_version='3.4.3',
+    dj_version='1.9.5',
+    py_version='3.5.1',
     pyenv_version=None,
 )
