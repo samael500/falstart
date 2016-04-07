@@ -1,8 +1,8 @@
-import sys
-import shutil
-import os
-import subprocess
 import json
+import os
+import shutil
+import subprocess
+import sys
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -14,14 +14,25 @@ VARS = dict(
 )
 
 
+def falstart_print(message, error=False, prefix='[falstart] >'):
+    """ Display given message with prefix"""
+    bold, red, end = '\033[1m', '\033[31m', '\033[0m'
+    print(''.join((
+        red if error else '',
+        bold, prefix, end,
+        red if error else '',
+        ' ', message, end,
+    )).strip())
+
+
 def run(command):
     """ wrapper of subprocess check_call fun """
-    sys.stdout.write('[falstart] run "{}"'.format(command))
+    falstart_print('run "{}"'.format(command))
     subprocess.check_call(command, shell=True)
 
 
 def put(src, dst):
-    sys.stdout.write('[falstart] copy "{}" > "{}"'.format(src, dst))
+    falstart_print('copy "{}" > "{}"'.format(src, dst))
     shutil.copytree(src, dst)
 
 
@@ -33,6 +44,7 @@ def render_template(template_name, remote_name):
     jinja_env = Environment(loader=FileSystemLoader(VARS['templates_dir']))
     template = jinja_env.get_template(template_name)
     # write to remote file
+    falstart_print('render "{}" > "{}"'.format(template_name, remote_name))
     with open(remote_name, 'w') as target_file:
         target_file.write(template.render(**VARS))
 
@@ -86,26 +98,25 @@ static/
 
 
 def make_custome_box():
-    with os.chdir(VARS['root_dir']):
-        VARS['custome_box'] = True
-        run('vagrant destroy -f')
-        # render templates to no provide app and syncfolder
-        render_template('Vagrantfile.j2', 'Vagrantfile')
-        run('vagrant up')
-        for cmd in (
-                'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
-                'cat /dev/null > ~/.bash_history && history -c'):
-            run('vagrant ssh -c {cmd}')
-        # make custome box
-        run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
-        # return template to back
-        VARS['custome_box'] = False
-        render_template('Vagrantfile.j2', 'Vagrantfile')
+    os.chdir(VARS['root_dir'])
+
+    VARS['custome_box'] = True
+    run('vagrant destroy -f')
+    # render templates to no provide app and syncfolder
+    render_template('Vagrantfile.j2', 'Vagrantfile')
+    run('vagrant up')
+    for cmd in (
+            'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
+            'cat /dev/null > ~/.bash_history && history -c'):
+        run('vagrant ssh -c {cmd}')
+    # make custome box
+    run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
+    # return template to back
+    VARS['custome_box'] = False
+    render_template('Vagrantfile.j2', 'Vagrantfile')
 
 
 def rmproj():
     """ Remove project """
-    with os.chdir(VARS['root_dir']):
-        run('vagrant destroy')
-
+    run('cd {root_dir} && vagrant destroy'.format(**VARS))
     run('rm {root_dir} -rf'.format(**VARS))
