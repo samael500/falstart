@@ -9,12 +9,11 @@ import string
 import random
 
 from settings import VARS
+from local_provision import common
 
 
 def fabric_task(taskname):
-    subprocess.call([
-        'fab', '-f', os.path.join(os.path.dirname(os.path.realpath(__file__)), 'fabfile.py'),
-        '--host=localhost', taskname])
+    common(taskname)
 
 
 def vagrant_fabric():
@@ -59,7 +58,7 @@ def read_data(args):
 
     while True:
         py_version = from_user(
-            'Python version', VARS.get('py_version', '3.4.3'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
+            'Python version', VARS.get('py_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
 
         if subprocess.check_output([
                 'curl', '-sL', 'https://www.python.org/ftp/python/{py_version}/'.format(py_version=py_version),
@@ -72,7 +71,7 @@ def read_data(args):
             'check uri https://www.python.org/ftp/python/\033[0m').format(py_version=py_version)
 
     VARS['proj_ip'] = from_user(
-        'Vagrant box IP-addr', VARS.get('proj_ip', '10.1.1.123'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
+        'Vagrant box IP-addr', VARS.get('proj_ip'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
 
     for name in 'POSTGRES', 'CELERY', 'REDIS':
         VARS[name] = from_user(
@@ -101,7 +100,7 @@ def parse():
 def main():
     read_data(parse())
     json.dump(VARS, open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'cfg.json'), 'w'))
-    fabric_task('common:start_box')
+    fabric_task('start_box')
 
 
 if __name__ == '__main__':
