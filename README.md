@@ -26,4 +26,6 @@ $ cd /your/proj/parent/dir
 $ falstart awesomeprojname
 ```
 
+Example project result [github.com:Samael500/falstart-example](https://github.com/Samael500/falstart-example)
+
 ![falstart example](example.gif)
