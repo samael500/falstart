@@ -94,7 +94,13 @@ settings_local.py
 var/
 static/
 " >> .gitignore''')
-    run('git add . && git commit -m ":rocket: falstart init commit"')
+    for attempt in range(2):
+        try:
+            run('git add . && git commit -m ":rocket: falstart init commit"')
+            break
+        except:
+            falstart_print('not a git repository', error=True)
+            run('git init')
 
 
 def make_custome_box():
