@@ -185,6 +185,9 @@ def start_app():
 
     # make replacements
     settings = settings.replace('''
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)''', '')
+
+    settings = settings.replace('''
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
