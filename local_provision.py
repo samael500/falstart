@@ -33,6 +33,8 @@ def run(command):
 
 def put(src, dst):
     falstart_print('copy "{}" > "{}"'.format(src, dst))
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
 
