@@ -56,7 +56,7 @@ def read_data(args):
     if not VARS.get('root_dir'):
         VARS['root_dir'] = VARS['proj_name']
 
-    dj_version = from_user(
+    VARS['dj_version'] = from_user(
         'Django version', VARS.get('dj_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
 
     while True:
