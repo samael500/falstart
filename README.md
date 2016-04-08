@@ -7,7 +7,6 @@ Pre Requirements
 
 - [Vagrant](https://www.vagrantup.com/downloads.html) && [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Fabric](https://github.com/fabric/fabric)
-- ssh on localhost (`$ sudo apt-get install ssh`)
 
 Setup
 -----
