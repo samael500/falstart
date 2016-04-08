@@ -90,6 +90,8 @@ def falstart_commit():
     """ Try to commit after box start """
     os.chdir(VARS['root_dir'])
     run('''echo "
+*.py[cod]
+__pycache__/
 # custome ignore
 settings_local.py
 .vagrant
