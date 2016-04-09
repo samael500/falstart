@@ -1,13 +1,13 @@
 VENV_PATH := venv/bin
 
 install:
-	ln -fs $(shell pwd)/falstart.py /usr/local/bin/falstart
+	ln -fs $(shell pwd)/falstart/falstart.py /usr/local/bin/falstart
 
 pep8:
-	$(VENV_PATH)/pep8 --exclude=*migrations*,*settings_local.py* --max-line-length=119 --show-source  {{ proj_name }}/
+	$(VENV_PATH)/pep8 --max-line-length=119 --show-source  falstart/
 
 pyflakes:
-	$(VENV_PATH)/pylama --skip=*migrations* -l pyflakes {{ proj_name }}/
+	$(VENV_PATH)/pylama -l pyflakes falstart/
 
 lint:
 	make pep8
