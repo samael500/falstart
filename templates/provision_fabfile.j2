@@ -142,9 +142,6 @@ def app():
         {% if init_app %}mk_wheel(){% endif %}
         # Install required python packages with pip from wheels archive
         run('make wheel_install')
-        # if running on CI - exit
-        if 'CI_FLAG' in os.environ:
-            return
         {% if init_app %}start_app(){% endif %}
         # run app tasks for devserver start
         # Copy settings local
