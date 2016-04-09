@@ -9,7 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 
 VARS = dict(
     init_app=True,
-    custome_box=False,
+    custom_box=False,
     templates_dir=os.path.join(os.path.dirname(__file__), 'templates')
 )
 
@@ -92,7 +92,7 @@ def falstart_commit():
     run('''echo "
 *.py[cod]
 __pycache__/
-# custome ignore
+# custom ignore
 settings_local.py
 .vagrant
 var/
@@ -107,10 +107,10 @@ static/
             run('git init')
 
 
-def make_custome_box():
+def make_custom_box():
     os.chdir(VARS['root_dir'])
 
-    VARS['custome_box'] = True
+    VARS['custom_box'] = True
     run('vagrant destroy -f')
     # render templates to no provide app and syncfolder
     render_template('Vagrantfile.j2', 'Vagrantfile')
@@ -119,10 +119,10 @@ def make_custome_box():
             'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
             'cat /dev/null > ~/.bash_history && history -c'):
         run('vagrant ssh -c {cmd}')
-    # make custome box
+    # make custom box
     run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
     # return template to back
-    VARS['custome_box'] = False
+    VARS['custom_box'] = False
     render_template('Vagrantfile.j2', 'Vagrantfile')
 
 

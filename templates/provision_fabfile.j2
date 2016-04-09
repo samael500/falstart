@@ -1,3 +1,4 @@
+# vi: syntax=python
 import os
 import fabric
 
@@ -148,6 +149,10 @@ def app():
         # run app tasks for devserver start
         # Copy settings local
         run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
+
+
+def localserver():
+    with cd(VARS['root_dir']):
         # collect static files
         for command in ('migrate --noinput', 'collectstatic --noinput', ):  # 'compilemessages', ):
             run('{venv_path}/bin/python manage.py {command}'.format(command=command, **VARS))
