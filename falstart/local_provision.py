@@ -2,7 +2,6 @@ import json
 import os
 import shutil
 import subprocess
-import sys
 
 from jinja2 import Environment, FileSystemLoader
 
