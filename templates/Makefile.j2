@@ -17,7 +17,7 @@ lint:
 	make pyflakes
 
 test:
-	$(VENV_PATH)/python manage.py test {{ proj_name }} -v 2 --noinput
+	$(VENV_PATH)/python manage.py test -v 2 --noinput
 
 ci_test:
 	make test
