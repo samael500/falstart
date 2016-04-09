@@ -1,5 +1,7 @@
 falstart
 ========
+[![Build Status](https://travis-ci.org/Samael500/falstart.svg?branch=master)](https://travis-ci.org/Samael500/falstart)
+
 fast start develop box template
 
 Pre Requirements
