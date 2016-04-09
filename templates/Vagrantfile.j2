@@ -1,8 +1,9 @@
+# vi:syntax=ruby
 ip_address = "{{ proj_ip }}"
 hostname = "{{ proj_name }}"
 box_name = "{{ box_name }}"
 
-SYNC_FOLDER = {{ 'false' if custome_box else 'true' }}
+SYNC_FOLDER = {{ 'false' if custom_box else 'true' }}
 
 unless Vagrant.has_plugin?("vagrant-fabric")
   raise "
@@ -20,7 +21,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: ip_address
   if SYNC_FOLDER then
     if ENV['CI_FLAG'] or ENV['NO_NFS'] then
-      config.vm.synced_folder ".", "/home/vagrant/proj"
+      config.vm.synced_folder ".", "/home/vagrant/proj", type: "rsync"
     else
       config.vm.synced_folder ".", "/home/vagrant/proj", type: "nfs",
       :mount_options => ['actimeo=2']
@@ -53,8 +54,9 @@ Vagrant.configure(2) do |config|
       "common",
       "database",
       "nginx",
-      {% if custome_box %}# {% endif %}"app",
+      {% if custom_box %}# {% endif %}"app",
     ]
+    {% if custom_box %}# {% endif %}fabric.tasks.push("localserver") unless ENV['CI_FLAG']
   end
 end
 {# keep trailing newline #}
