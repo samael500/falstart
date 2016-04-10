@@ -160,7 +160,8 @@ def localserver():
         # sudo('chmod 755 {base_dir}/static -R'.format(**VARS))
         # Create user
         create_user_py = (
-            'from django.contrib.auth.models import User'   '\n'
+            'from django.contrib.auth import get_user_model'   '\n'
+            'User = get_user_model()' '\n'
             'User.objects.create_superuser(**{user_data})'  '\n'
         ).format(**VARS)
 
