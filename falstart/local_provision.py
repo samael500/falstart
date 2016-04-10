@@ -2,7 +2,6 @@ import json
 import os
 import shutil
 import subprocess
-import sys
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -33,6 +32,8 @@ def run(command):
 
 def put(src, dst):
     falstart_print('copy "{}" > "{}"'.format(src, dst))
+    if os.path.exists(dst):
+        shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
 

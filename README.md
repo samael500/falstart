@@ -1,5 +1,7 @@
 falstart
 ========
+[![Build Status](https://travis-ci.org/Samael500/falstart.svg?branch=master)](https://travis-ci.org/Samael500/falstart)
+
 fast start develop box template
 
 Pre Requirements
@@ -7,7 +9,6 @@ Pre Requirements
 
 - [Vagrant](https://www.vagrantup.com/downloads.html) && [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Fabric](https://github.com/fabric/fabric)
-- ssh on localhost (`$ sudo apt-get install ssh`)
 
 Setup
 -----
