@@ -4,9 +4,6 @@ else
 	VENV_PATH :=
 endif
 
-install:
-	ln -fs $(shell pwd)/falstart/falstart.py /usr/local/bin/falstart
-
 pep8:
 	$(VENV_PATH)pep8 --max-line-length=119 --show-source  falstart/
 
