@@ -29,11 +29,11 @@ Usage
     $ cd /your/proj/parent/dir
     $ falstart awesomeprojname
 
-Example project result .. `github.com:Samael500/falstart-example`_
+Example project result `github.com:Samael500/falstart-example`_
 
 .. `falstart example`:: example.gif
 
 .. _Vagrant: https://www.vagrantup.com/downloads.html
 .. _VirtualBox: https://www.virtualbox.org/wiki/Downloads
 .. _Fabric: https://github.com/fabric/fabric
-.. _`github.com:Samael500/falstart-example`: https://github.com/Samael500/falstart-example
+.. _falstart_example: https://github.com/Samael500/falstart-example
