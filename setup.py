@@ -25,11 +25,17 @@ setup(
     author_email='samae500@gmail.com',
     url='https://github.com/Samael500/falstart',
     packages=['falstart'],
+    package_data={
+        'falstart': [
+            'templates/*.j2',
+            'templates/vagrant_templates/*.j2',
+        ]
+    },
     license='MIT',
     description='Tool for fast start develop box template.',
     long_description=read('README.md'),
     install_requires=required,
-    data_files=[('', ['LICENSE', 'README.md'])],
+    data_files=[('', ['LICENSE', 'README.md', ]), ],
     entry_points={
         'console_scripts': ['falstart = falstart.falstart:main']
     },
