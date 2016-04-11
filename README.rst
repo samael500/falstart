@@ -2,8 +2,9 @@
 falstart
 ========
 
-.. build status:: https://travis-ci.org/Samael500/falstart.svg?branch=master
+.. image:: https://travis-ci.org/Samael500/falstart.svg?branch=master
     :target: https://travis-ci.org/Samael500/falstart
+    :alt: build status
 
 fast start develop box template
 
@@ -31,9 +32,9 @@ Usage
 
 Example project result `github.com:Samael500/falstart-example`_
 
-.. `falstart example`:: example.gif
+.. image:: https://raw.githubusercontent.com/samael500/falstart/master/example.gif
 
 .. _Vagrant: https://www.vagrantup.com/downloads.html
 .. _VirtualBox: https://www.virtualbox.org/wiki/Downloads
 .. _Fabric: https://github.com/fabric/fabric
-.. _falstart_example: https://github.com/Samael500/falstart-example
+.. _`github.com:Samael500/falstart-example`: https://github.com/Samael500/falstart-example
