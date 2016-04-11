@@ -14,9 +14,7 @@ Setup
 -----
 
 ```
-$ git clone https://github.com/Samael500/falstart.git
-$ cd falstart
-$ sudo make install
+$ pip install falstart
 ```
 
 Usage
