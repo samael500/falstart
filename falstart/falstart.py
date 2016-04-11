@@ -101,11 +101,7 @@ def parse():
 
 
 def main():
+    vagrant_fabric()
     read_data(parse())
     json.dump(VARS, open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'cfg.json'), 'w'))
     fabric_task('start_box')
-
-
-if __name__ == '__main__':
-    vagrant_fabric()
-    main()
