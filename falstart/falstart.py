@@ -43,7 +43,7 @@ def from_user(msg, default, validate, yesno=False):
             if yesno:
                 return value.lower() == 'y'
             return value
-        print '\033[31m\033[1m> Incorrect input format\033[0m\033[31m check regex r"{}"\033[0m'.format(validate)
+        print('\033[31m\033[1m> Incorrect input format\033[0m\033[31m check regex r"{}"\033[0m'.format(validate))
 
 
 def read_data(args):
@@ -69,7 +69,7 @@ def read_data(args):
 
             VARS.update(dict(py_version=py_version, pyenv_version=re.findall(r'^\d{1,2}\.\d{1,2}', py_version)[0]))
             break
-        print (
+        print(
             '\033[31m\033[1m> Python version "{py_version}" not available\033[0m\033[31m '
             'check uri https://www.python.org/ftp/python/\033[0m').format(py_version=py_version)
 
