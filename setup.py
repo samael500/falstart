@@ -50,5 +50,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
-    keywords='fabric vagrant virtualbox development fast start template',
+    keywords='fabric vagrant virtualbox development fast start template'.split(),
 )
