@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import json
 import re
 import os
 import argparse
@@ -10,10 +9,6 @@ import random
 
 from settings import VARS
 from local_provision import common
-
-
-def fabric_task(taskname):
-    common(taskname)
 
 
 def vagrant_fabric():
@@ -48,7 +43,6 @@ def from_user(msg, default, validate, yesno=False):
 
 def read_data(args):
     VARS.update(args)
-    VARS['base_path'] = os.getcwd()
 
     proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
     VARS['proj_name'] = proj_name or from_user(
@@ -88,20 +82,26 @@ def read_data(args):
             VARS[name] = from_user(
                 'Database {}'.format(name).replace('db_', ''), VARS.get(name) or default, r'^\w+$')
 
-    VARS['root_dir'] = os.path.join(VARS['base_path'], VARS['root_dir'])
-
 
 def parse():
     parser = argparse.ArgumentParser(description='Falstart is a fast develop template box start tool.')
-    parser.add_argument('root_dir', nargs='?', help='Name of started project', type=str)
+    parser.add_argument('root_dir', nargs=1, help='Name of started project', type=str)
     parser.add_argument(
         '--no-input', dest='no_input', action='store_true',
         help='Non interactive config parse', default=False)
-    return parser.parse_args().__dict__
+    parser.add_argument(
+        '--box', dest='custom_box', action='store_true',
+        help='Pack vagrant to custom box', default=False)
+    result = parser.parse_args().__dict__
+    result['root_dir'] = result['root_dir'][0]
+    return result
 
 
 def main():
     vagrant_fabric()
-    read_data(parse())
-    json.dump(VARS, open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'cfg.json'), 'w'))
-    fabric_task('start_box')
+    parse_data = parse()
+    if parse_data['custom_box']:
+        common('make_custom_box', parse_data['root_dir'])
+    else:
+        read_data(parse_data)
+        common('start_box', parse_data['root_dir'], VARS)
