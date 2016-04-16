@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import re
-import os
 import argparse
 import subprocess
 import string
