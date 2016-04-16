@@ -52,6 +52,7 @@ def render_template(template_name, remote_name):
 
 def common(taskname, root_dir, config=None):
     """ Run all common tasks """
+    root_dir = os.path.join(os.getcwd(), root_dir)
     run('mkdir -p {root_dir}'.format(root_dir=root_dir))
     os.chdir(root_dir)
     # update configs
@@ -60,6 +61,7 @@ def common(taskname, root_dir, config=None):
     else:
         json.dump(config, open('.falstart.json', 'w'))
         VARS.update(config)
+    VARS['root_dir'] = root_dir
     globals()[taskname]()
 
 
