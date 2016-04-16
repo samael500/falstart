@@ -10,8 +10,8 @@ falstart
     :target: https://pypi.python.org/pypi/falstart
     :alt: pypi version
 
-.. image:: https://img.shields.io/pypi/l/falstart.svg?maxAge=2592000&style=flat
-    :target: https://pypi.python.org/pypi/falstart
+.. image:: https://img.shields.io/github/license/samael500/falstart.svg?maxAge=2592000&style=flat
+    :target: https://github.com/Samael500/falstart/blob/master/LICENSE
     :alt: license
 
 
