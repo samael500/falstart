@@ -10,6 +10,10 @@ falstart
     :target: https://pypi.python.org/pypi/falstart
     :alt: pypi version
 
+.. image:: https://img.shields.io/pypi/status/falstart.svg?maxAge=2592000?style=flat
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: version status
+
 .. image:: https://img.shields.io/pypi/format/falstart.svg?maxAge=2592000?style=flat
     :target: https://pypi.python.org/pypi/falstart
     :alt: pypi format
