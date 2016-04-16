@@ -2,9 +2,18 @@
 falstart
 ========
 
-.. image:: https://travis-ci.org/Samael500/falstart.svg?branch=master
+.. image:: https://img.shields.io/travis/samael500/falstart.svg?maxAge=2592000&style=plastic
     :target: https://travis-ci.org/Samael500/falstart
     :alt: build status
+
+.. image:: https://img.shields.io/pypi/v/falstart.svg?maxAge=2592000&style=plastic
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: pypi version
+
+.. image:: https://img.shields.io/pypi/l/falstart.svg?maxAge=2592000&style=plastic
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: license
+
 
 fast start develop box template
 
