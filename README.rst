@@ -10,9 +10,25 @@ falstart
     :target: https://pypi.python.org/pypi/falstart
     :alt: pypi version
 
+.. image:: https://img.shields.io/pypi/format/falstart.svg?maxAge=2592000?style=flat
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: pypi format
+
+.. image:: https://img.shields.io/pypi/implementation/falstart.svg?maxAge=2592000?style=flat
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: python implementation
+
+.. image:: https://img.shields.io/pypi/dm/falstart.svg?maxAge=2592000?style=flat
+    :target: https://pypi.python.org/pypi/falstart
+    :alt: pypi downloads
+
 .. image:: https://img.shields.io/github/license/samael500/falstart.svg?maxAge=2592000&style=flat
     :target: https://github.com/Samael500/falstart/blob/master/LICENSE
     :alt: license
+
+.. image:: https://img.shields.io/github/issues/samael500/falstart.svg?maxAge=2592000?style=flat
+    :target: https://github.com/Samael500/falstart/issues
+    :alt: issues
 
 
 fast start develop box template
