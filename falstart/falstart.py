@@ -6,8 +6,8 @@ import subprocess
 import string
 import random
 
-from settings import VARS
-from local_provision import common
+from .settings import VARS
+from .local_provision import common
 
 
 def vagrant_fabric():
