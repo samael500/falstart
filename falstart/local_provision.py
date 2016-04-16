@@ -50,16 +50,21 @@ def render_template(template_name, remote_name):
         target_file.write(template.render(**VARS))
 
 
-def common(taskname):
+def common(taskname, root_dir, config=None):
     """ Run all common tasks """
-    config = json.load(open(os.path.join(os.path.dirname(__file__), 'cfg.json')))
-    VARS.update(config)
+    run('mkdir -p {root_dir}'.format(root_dir=root_dir))
+    os.chdir(root_dir)
+    # update configs
+    if config is None:
+        VARS.update(json.load(open('.falstart.json', 'r')))
+    else:
+        json.dump(config, open('.falstart.json', 'w'))
+        VARS.update(config)
     globals()[taskname]()
 
 
 def start_box():
     """ Create Vagrant file and up virtual machine """
-    run('mkdir -p {root_dir}'.format(**VARS))
     # chandge working dir to root dir
     os.chdir(VARS['root_dir'])
     # render templates for vagrant up
@@ -107,8 +112,6 @@ static/
 
 
 def make_custom_box():
-    os.chdir(VARS['root_dir'])
-
     VARS['custom_box'] = True
     run('vagrant destroy -f')
     # render templates to no provide app and syncfolder
@@ -117,7 +120,7 @@ def make_custom_box():
     for cmd in (
             'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
             'cat /dev/null > ~/.bash_history && history -c'):
-        run('vagrant ssh -c {cmd}')
+        run('vagrant ssh -c "{}"'.format(cmd))
     # make custom box
     run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
     # return template to back

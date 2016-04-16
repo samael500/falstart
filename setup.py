@@ -33,9 +33,9 @@ setup(
     },
     license='MIT',
     description='Tool for fast start develop box template.',
-    long_description=read('README.md'),
+    long_description=read('README.rst'),
     install_requires=required,
-    data_files=[('', ['LICENSE', 'README.md', ]), ],
+    data_files=[('', ['LICENSE', 'README.rst', ]), ],
     entry_points={
         'console_scripts': ['falstart = falstart.falstart:main']
     },
@@ -50,5 +50,5 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
-    keywords='fabric vagrant virtualbox development fast start template',
+    keywords='fabric vagrant virtualbox development fast start template'.split(),
 )
