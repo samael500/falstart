@@ -6,6 +6,7 @@ import subprocess
 import string
 import random
 
+from . import __version__
 from .settings import VARS
 from .local_provision import common
 
@@ -92,8 +93,7 @@ def parse():
         '--box', dest='custom_box', action='store_true',
         help='Pack vagrant to custom box', default=False)
     parser.add_argument(
-        '-v', '--version', dest='version', action='store_true',
-        help='Display current falstart version', default=False)
+        '-v', '--version', action='version', version='falstart version {}'.format(__version__))
     result = parser.parse_args().__dict__
     result['root_dir'] = result['root_dir'][0]
     return result
@@ -101,10 +101,7 @@ def parse():
 
 def main():
     parse_data = parse()
-    if parse_data['version']:
-        from . import __version__
-        print('falstart version {}'.format(__version__))
-    elif parse_data['custom_box']:
+    if parse_data['custom_box']:
         common('make_custom_box', parse_data['root_dir'])
     else:
         vagrant_fabric()
