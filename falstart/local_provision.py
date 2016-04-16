@@ -120,7 +120,7 @@ def make_custom_box():
     for cmd in (
             'sudo dd if=/dev/zero of=/EMPTY bs=1M', 'sudo rm -f /EMPTY',
             'cat /dev/null > ~/.bash_history && history -c'):
-        run('vagrant ssh -c {}'.format(cmd))
+        run('vagrant ssh -c "{}"'.format(cmd))
     # make custom box
     run('vagrant package --output ~/{proj_name}.box'.format(**VARS))
     # return template to back
