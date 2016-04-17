@@ -26,21 +26,27 @@ def falstart_print(message, error=False, prefix='[falstart] >'):
 
 def run(command):
     """ wrapper of subprocess check_call fun """
-    falstart_print('run "{}"'.format(command))
+    falstart_print('run: "{}"'.format(command))
     subprocess.check_call(command, shell=True)
 
 
 def put(src, dst):
-    falstart_print('copy "{}" > "{}"'.format(src, dst))
+    falstart_print('copy: "{}" > "{}"'.format(src, dst))
     if os.path.exists(dst):
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
+def mkdir(path):
+    falstart_print('make dir: "{}"'.format(path))
+    try:
+        os.makedirs(path)
+    except OSError:
+        pass
 
 def render_template(template_name, remote_name):
     """ Render wrapper for simplify touch rendered template into target """
     if os.path.dirname(remote_name):
-        run('mkdir -p {}'.format(os.path.dirname(remote_name)))
+        mkdir(os.path.dirname(remote_name))
     # load jinja template
     jinja_env = Environment(loader=FileSystemLoader(VARS['templates_dir']))
     template = jinja_env.get_template(template_name)
@@ -53,7 +59,7 @@ def render_template(template_name, remote_name):
 def common(taskname, root_dir, config=None):
     """ Run all common tasks """
     root_dir = os.path.join(os.getcwd(), root_dir)
-    run('mkdir -p {root_dir}'.format(root_dir=root_dir))
+    mkdir(root_dir)
     os.chdir(root_dir)
     # update configs
     if config is None:
@@ -67,14 +73,12 @@ def common(taskname, root_dir, config=None):
 
 def start_box():
     """ Create Vagrant file and up virtual machine """
-    # chandge working dir to root dir
-    os.chdir(VARS['root_dir'])
     # render templates for vagrant up
     render_template('Vagrantfile.j2', 'Vagrantfile')
     render_template('Makefile.j2', 'Makefile')
     run('chmod +x Makefile')
     # make provisioning folder
-    run('mkdir -p provision')
+    mkdir('provision')
     render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
     render_template('requirements.j2', 'requirements.txt')
     render_template('requirements.j2', 'requirements-remote.txt')
@@ -83,8 +87,13 @@ def start_box():
         render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
     # copy templates for vagrant fabric render
     put(os.path.join(VARS['templates_dir'], 'vagrant_templates'), 'provision/templates')
-    # run vagrant up
-    run('vagrant up')
+    try:
+        # run vagrant up
+        run('vagrant up')
+    except:
+        falstart_print('Error occurred when up the vagrant machine.', error=True)
+        falstart_print('You can try to manually start the Vagrant.', error=True)
+
     # replace template
     VARS['init_app'] = False
     render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
@@ -94,16 +103,21 @@ def start_box():
 
 def falstart_commit():
     """ Try to commit after box start """
-    os.chdir(VARS['root_dir'])
-    run('''echo "
-*.py[cod]
-__pycache__/
-# custom ignore
-settings_local.py
-.vagrant
-var/
-static/
-" >> .gitignore''')
+    ignore = (
+        '*.py[cod]',
+        '__pycache__/',
+        '# custom ignore',
+        'settings_local.py',
+        '.vagrant',
+        'var/',
+        'static/',
+        '',
+    )
+
+    falstart_print('Update .gitignore')
+    with open('.gitignore', 'a') as gitignore:
+        gitignore.write('\n'.join(ignore))
+
     for attempt in range(2):
         try:
             run('git add . && git commit -m ":rocket: falstart init commit"')
