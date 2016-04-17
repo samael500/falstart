@@ -36,12 +36,14 @@ def put(src, dst):
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
+
 def mkdir(path):
     falstart_print('make dir: "{}"'.format(path))
     try:
         os.makedirs(path)
     except OSError:
         pass
+
 
 def render_template(template_name, remote_name):
     """ Render wrapper for simplify touch rendered template into target """
