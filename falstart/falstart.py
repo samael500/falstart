@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+import sys
 import argparse
 import subprocess
 import string
@@ -10,11 +11,15 @@ from . import __version__
 from .settings import VARS
 from .local_provision import common
 
+if sys.version_info.major == 3:
+    # allow py3 use input
+    raw_input = input
+
 
 def vagrant_fabric():
     """ Check is vagrant fabric installed and if not - install """
     plugins = subprocess.check_output(['vagrant', 'plugin', 'list'])
-    if 'vagrant-fabric' not in plugins:
+    if 'vagrant-fabric' not in str(plugins):
         # https://github.com/wutali/vagrant-fabric
         subprocess.call(['vagrant', 'plugin', 'install', 'vagrant-fabric'])
 
