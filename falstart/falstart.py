@@ -12,8 +12,11 @@ from .settings import VARS
 from .local_provision import common
 
 if sys.version_info.major == 3:
+    from urllib.request import urlopen
     # allow py3 use input
     raw_input = input
+elif sys.version_info.major == 2:
+    from urllib import urlopen
 
 
 def vagrant_fabric():
@@ -62,15 +65,11 @@ def read_data(args):
         py_version = from_user(
             'Python version', VARS.get('py_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
 
-        if subprocess.check_output([
-                'curl', '-sL', 'https://www.python.org/ftp/python/{py_version}/'.format(py_version=py_version),
-                '-w', '%{http_code}', '-o', '/dev/null']) == '200':
-
+        if urlopen('https://www.python.org/ftp/python/{py_version}/'.format(py_version=py_version)).getcode() == 200:
             VARS.update(dict(py_version=py_version, pyenv_version=re.findall(r'^\d{1,2}\.\d{1,2}', py_version)[0]))
             break
-        print(
-            '\033[31m\033[1m> Python version "{py_version}" not available\033[0m\033[31m '
-            'check uri https://www.python.org/ftp/python/\033[0m').format(py_version=py_version)
+        print('\033[31m\033[1m> Python version "{py_version}" not available\033[0m\033[31m '
+              'check uri https://www.python.org/ftp/python/\033[0m'.format(py_version=py_version))
 
     VARS['proj_ip'] = from_user(
         'Vagrant box IP-addr', VARS.get('proj_ip'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
