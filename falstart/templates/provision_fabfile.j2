@@ -43,7 +43,7 @@ VARS = dict(
 def sentinel(sentinel_name):
     def sentinel_wrapp(function):
         def wrapped():
-            sentinel_path = '/usr/{}'.format(sentinel_name)
+            sentinel_path = '/usr/sentinel_{}'.format(sentinel_name)
             if fabric.contrib.files.exists(sentinel_path):
                 fabric.utils.warn('skip {}'.format(sentinel_name))
                 return
@@ -74,6 +74,7 @@ def nginx():
     sudo('service nginx restart')
 
 
+@sentinel('database')
 def database():
     """ Install database """{% if POSTGRES %}
     # install postgres apt
@@ -93,6 +94,7 @@ def database():
     pass{% endif %}
 
 
+@sentinel('locale')
 def locale():
     """ Set locale to enviroment """
     fabric.contrib.files.upload_template(
@@ -102,6 +104,7 @@ def locale():
     # sudo('locale-gen')
 
 
+@sentinel('apt_packages')
 def apt_packages():
     """ Install common packages """
     sudo('apt-get -y update')
@@ -171,6 +174,7 @@ def localserver():
         run('make runcelery_multi', pty=False){% endif %}
 {% if init_app %}
 
+@sentinel('mk_wheel')
 def mk_wheel():
     """ make wheels """
     run('{venv_path}/bin/pip install -U pip wheel'.format(**VARS))
@@ -178,6 +182,7 @@ def mk_wheel():
     run('{venv_path}/bin/pip wheel -w wheels/ -r requirements-remote.txt --pre --allow-all-external'.format(**VARS))
 
 
+@sentinel('start_app')
 def start_app():
     """ start dj app """
     with fabric.context_managers.settings(warn_only=True):
