@@ -20,3 +20,6 @@ test:
 ci_test:
 	make test
 	make lint
+
+pypi:
+	python setup.py sdist bdist_wheel upload
