@@ -13,16 +13,12 @@ pep8:
 pyflakes:
 	$(VENV_PATH)/pylama --skip=*migrations* -l pyflakes $(PROJ_NAME)/
 
-lint:
-	make pep8
-	make pyflakes
+lint: pep8 pyflakes
 
 test:
 	$(VENV_PATH)/python manage.py test -v 2 --noinput
 
-ci_test:
-	make test
-	make lint
+ci_test: test lint
 
 wheel_install:
 	$(VENV_PATH)/pip install --no-index -f wheels/ -r requirements.txt
