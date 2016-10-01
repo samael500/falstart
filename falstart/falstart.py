@@ -74,7 +74,7 @@ def read_data(args):
     VARS['proj_ip'] = from_user(
         'Vagrant box IP-addr', VARS.get('proj_ip'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
 
-    for name in 'POSTGRES', 'CELERY', 'REDIS':
+    for name in 'POSTGRES', 'CELERY', 'REDIS', 'SENTRY':
         VARS[name] = from_user(
             'Do you nead a {}?'.format(name), VARS.get(name, False), r'^[YyNn]{1}$', yesno=True)
 
