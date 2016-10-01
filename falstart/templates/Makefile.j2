@@ -1,4 +1,4 @@
-VENV_PATH := /home/vagrant/venv/bin
+VENV_PATH := $(HOME)/venv/bin
 PROJ_NAME := {{ proj_name }}
 
 runserver:
@@ -18,7 +18,15 @@ lint: pep8 pyflakes
 test:
 	$(VENV_PATH)/python manage.py test -v 2 --noinput
 
-ci_test: test lint
+cover_test:
+	$(VENV_PATH)/coverage run --source=$(PROJ_NAME) manage.py test -v 2 --noinput
+
+cover_report:
+	$(VENV_PATH)/coverage report -m
+	$(VENV_PATH)/coverage html
+	$(VENV_PATH)/coverage-badge > htmlcov/coverage.svg
+
+ci_test: cover_test cover_report lint
 
 wheel_install:
 	$(VENV_PATH)/pip install --no-index -f wheels/ -r requirements.txt
