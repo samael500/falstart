@@ -84,6 +84,7 @@ def start_box():
     render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
     render_template('requirements.j2', 'requirements.txt')
     render_template('requirements.j2', 'requirements-remote.txt')
+    render_template('lintrc.j2', '.lintrc')
     render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
     if VARS.get('CELERY'):
         render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
