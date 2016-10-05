@@ -72,16 +72,17 @@ def start_app():
             }
         '''),
         dedent('''\
-            DATABASES = {{
-                'default': {{
+            DATABASES = {
+                'default': {
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': '{db_name}',
-                    'USER': '{db_user}',
-                    'PASSWORD': '{db_password}',
+                    'NAME': '{{ db_name }}',
+                    'USER': '{{ db_user }}',
+                    'PASSWORD': '{{ db_password }}',
                     'HOST': '127.0.0.1',
-                }}
-            }}'''.format(**VARS)
-        )
+                }
+            }
+        ''')
+    )
     {% endif %}
 
     settings += render_to_string('includes/settings_tail.py')
