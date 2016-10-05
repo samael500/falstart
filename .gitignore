@@ -63,4 +63,4 @@ target/
 
 # custom
 *.json
-venv?/
+venv/
