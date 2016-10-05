@@ -85,9 +85,10 @@ def start_box():
     render_template('requirements.j2', 'requirements.txt')
     render_template('requirements.j2', 'requirements-remote.txt')
     render_template('lintrc.j2', '.lintrc')
-    render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
+    render_template('py_codes/settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
     if VARS.get('CELERY'):
-        render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
+        render_template('py_codes/celery.j2', '{proj_name}/celery.py'.format(**VARS))
+        render_template('py_codes/celery_init.j2', '{proj_name}/__init__.py'.format(**VARS))
     # copy templates for vagrant fabric render
     put(os.path.join(VARS['templates_dir'], 'vagrant_templates'), 'provision/templates')
     try:

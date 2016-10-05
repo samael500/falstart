@@ -1,15 +1,15 @@
-{% include 'includes/head.py' with context %}
+{% include 'includes/head.j2' with context %}
 
 
-{% include 'includes/common.py' with context %}
+{% include 'includes/common.j2' with context %}
 
 
-{% include 'includes/nginx.py' with context %}
+{% include 'includes/nginx.j2' with context %}
 
 
-{% include 'includes/database.py' with context %}
+{% include 'includes/database.j2' with context %}
 
 
-{% include 'includes/app.py' with context %}
-{% if init_app %}{% include 'includes/app_init.py' with context %}{% endif %}
+{% include 'includes/app.j2' with context %}
+{% if init_app %}{% include 'includes/app_init.j2' with context %}{% endif %}
 {# keep trailing newline #}
