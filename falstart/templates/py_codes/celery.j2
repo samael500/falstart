@@ -16,7 +16,7 @@ class Celery(celery.Celery):
     """ Configure celery with raven """
 
     def on_configure(self):
-        if not settings.CELERY_RAVEN_DSN:
+        if not getattr(settings, 'CELERY_RAVEN_DSN'):
             # for no send raven reports from dev server
             return
         client = raven.Client(settings.CELERY_RAVEN_DSN)
