@@ -28,3 +28,9 @@ class PartialRenderTestCase(FalstartTestCase):
         template_name = 'includes/app.j2'
         context = {'pyenv_version': 3.1415, 'CELERY': True}
         self.assertEqualRender(template_name, context, 'app_celery.txt')
+
+    def test_db_render_app_init(self):
+        """ Should check the app init provisioning correct when celery and pg """
+        template_name = 'includes/app_init.j2'
+        context = {'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': True}
+        self.assertEqualRender(template_name, context, 'app_init.txt')

@@ -22,7 +22,7 @@ def app():
     """ Run application tasks """
     with cd(VARS['root_dir']):
         # Create venv and install requirements
-        run('pyvenv-{{ pyenv_version }} {venv_path}'.format(**VARS))
+        run('pyvenv-3.1415 {venv_path}'.format(**VARS))
         # make wheels for python packages
         run('{venv_path}/bin/pip install -U pip wheel'.format(**VARS))
         run('mkdir -p wheels')
@@ -60,7 +60,6 @@ def start_app():
         )
     )
 
-    {% if POSTGRES %}
     settings = settings.replace(
         dedent('''\
             DATABASES = {
@@ -82,15 +81,10 @@ def start_app():
             }
         ''')
     )
-    {% endif %}
 
     settings += render_to_string('includes/settings_tail.py')
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
 
-    {% if CELERY %}
     with open('{project_name}/__init__.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(render_to_string('includes/celery_init.py'))
-    {% endif %}
-
-{# keep trailing newline #}
