@@ -9,12 +9,10 @@ class PartialRenderTestCase(FalstartTestCase):
         """ Should check the db provisioning correct when sqlite """
         template_name = 'includes/database.j2'
         context = {'POSTGRES': False}
-        with open('etalons/db_sqlite.txt') as etalon:
-            self.assertEqual(self.render_to_string(template_name, context), etalon.read())
+        self.assertEqualRender(template_name, context, 'db_sqlite.txt')
 
     def test_db_render_postgres(self):
         """ Should check the db provisioning correct when postgres """
         template_name = 'includes/database.j2'
         context = {'POSTGRES': True}
-        with open('etalons/db_postgres.txt') as etalon:
-            self.assertEqual(self.render_to_string(template_name, context), etalon.read())
+        self.assertEqualRender(template_name, context, 'db_postgres.txt')

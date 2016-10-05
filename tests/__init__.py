@@ -9,11 +9,16 @@ class FalstartTestCase(TestCase):
 
     """ Abstract base Test Case for Falstart. """
 
-    def render_to_string(template_name, context, template_dir=None):
+    def render_to_string(self, template_name, context, template_dir=None):
         """ Render template to string """
         template_dir = template_dir or os.path.join(BASE_DIR, 'falstart', 'templates')
         # load jinja template
         jinja_env = Environment(loader=FileSystemLoader(template_dir))
         template = jinja_env.get_template(template_name)
         # write to remote file
-        return target_file.write(template.render(**context))
+        return template.render(**context)
+
+    def assertEqualRender(self, template_name, context, etalon_name):
+        """ Open etalon file and check render correct """
+        with open(os.path.join(BASE_DIR, 'tests', 'etalons', etalon_name)) as etalon:
+            self.assertEqual(self.render_to_string(template_name, context), etalon.read())

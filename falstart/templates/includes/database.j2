@@ -13,5 +13,5 @@ def database():
             'GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {db_user};',
         )
         for command in commands:
-            run('sudo -u postgres psql -c "%s"' % command.format(**VARS))
-    {% else %}pass{% endif %}
+            run('sudo -u postgres psql -c "%s"' % command.format(**VARS)){% else %}pass{% endif %}
+{# keep trailing newline #}
