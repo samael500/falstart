@@ -16,3 +16,15 @@ class PartialRenderTestCase(FalstartTestCase):
         template_name = 'includes/database.j2'
         context = {'POSTGRES': True}
         self.assertEqualRender(template_name, context, 'db_postgres.txt')
+
+    def test_db_render_app(self):
+        """ Should check the app provisioning correct when no celery """
+        template_name = 'includes/app.j2'
+        context = {'pyenv_version': 3.1415, 'CELERY': False}
+        self.assertEqualRender(template_name, context, 'app.txt')
+
+    def test_db_render_app_celery(self):
+        """ Should check the app provisioning correct when celery """
+        template_name = 'includes/app.j2'
+        context = {'pyenv_version': 3.1415, 'CELERY': True}
+        self.assertEqualRender(template_name, context, 'app_celery.txt')

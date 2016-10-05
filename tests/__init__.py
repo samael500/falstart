@@ -21,4 +21,14 @@ class FalstartTestCase(TestCase):
     def assertEqualRender(self, template_name, context, etalon_name):
         """ Open etalon file and check render correct """
         with open(os.path.join(BASE_DIR, 'tests', 'etalons', etalon_name)) as etalon:
-            self.assertEqual(self.render_to_string(template_name, context), etalon.read())
+            rendered = self.render_to_string(template_name, context)
+            corrected = etalon.read()
+            try:
+                self.assertEqual(rendered, corrected)
+            except:
+                print ('=== RENDERED RESULT:')
+                print (rendered)
+                print ('=== SHULD BE')
+                print (corrected)
+                print ('===')
+                raise
