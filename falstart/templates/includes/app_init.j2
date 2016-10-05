@@ -37,8 +37,7 @@ def app():
 
 def start_app():
     """ start dj app """
-    with fabric.context_managers.settings(warn_only=True):
-        run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
+    run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
 
     with open('{project_name}/settings.py'.format(**VARS), 'r') as settings_file:
         settings = settings_file.read()
@@ -88,4 +87,10 @@ def start_app():
     settings += render_to_string('includes/settings_tail.py')
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
+
+    {% if CELERY %}
+        with open('{project_name}/__init__.py'.format(**VARS), 'w') as settings_file:
+            settings_file.write(render_to_string('includes/celery_init.py'))
+    {% endif %}
+
 {# keep trailing newline #}
