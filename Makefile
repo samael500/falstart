@@ -15,7 +15,7 @@ lint:
 	make pyflakes
 
 test:
-	# TODO: run test when it be
+	$(VENV_PATH)nosetests --with-specplugin ./tests/
 
 ci_test:
 	make test
