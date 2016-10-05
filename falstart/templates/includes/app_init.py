@@ -7,6 +7,17 @@ and boxing has not made a complete build. It is necessary to correct
 the errors and manually delete the code.
 """
 
+from jinja2 import Environment, FileSystemLoader
+
+def render_to_string(template_name):
+    """ Render template to string """
+    # load jinja template
+    jinja_env = Environment(loader=FileSystemLoader(VARS['templates_dir']))
+    template = jinja_env.get_template(template_name)
+    # write to remote file
+    return target_file.write(template.render(**VARS))
+
+
 def app():
     """ Run application tasks """
     with cd(VARS['root_dir']):
@@ -41,6 +52,7 @@ def start_app():
         dedent(
         '''\
             import sys
+
             BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
             if __name__ in ['settings', '{project_name}.settings']:
@@ -48,55 +60,35 @@ def start_app():
         '''.format(**VARS)
         )
     )
-{% if POSTGRES %}
-    settings = settings.replace('''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-''', '''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '%(db_name)s',
-        'USER': '%(db_user)s',
-        'PASSWORD': '%(db_password)s',
-        'HOST': '127.0.0.1',
-    }
-}''' % VARS)
-{% endif %}
-    if 'STATIC_ROOT' not in settings:
-        settings = settings.replace('''
-STATIC_URL = '/static/'
-''', '''
-TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '%(project_name)s/static'
-{% if CELERY %}
+    {% if POSTGRES %}
+    settings = settings.replace(
+        dedent('''\
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+                }
+            }
+        '''),
+        dedent('''\
+            DATABASES = {{
+                'default': {{
+                    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                    'NAME': '{db_name}',
+                    'USER': '{db_user}',
+                    'PASSWORD': '{db_password}',
+                    'HOST': '127.0.0.1',
+                }}
+            }}'''.format(**VARS)
+        )
+    {% endif %}
 
-# celery settings
-broker_connection_link = {% if REDIS %}'redis://localhost:6379/0'{% else %}'amqp://guest:guest@localhost:5672//'{% endif %}
-
-BROKER_URL = CELERY_RESULT_BACKEND = broker_connection_link
-CELERY_ACCEPT_CONTENT = ['json', ]
-{% endif %}
-
-try:
-    from settings_local import *  # noqa
-except ImportError:
-    pass
-''' % VARS)
-
+    settings += render_to_string('includes/settings_tail.py')
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
-{% endif %}
-{% if CELERY %}
-    with open('{project_name}/__init__.py'.format(**VARS), 'w') as init_file:
-        init_file.write('''# This will make sure the app is always imported when
-# Django starts so that shared_task will use this app.
-from .celery import app as celery_app  # noqa
-''')
-{% endif %}
+
+    {% if CELERY %}
+        with open('{project_name}/__init__.py'.format(**VARS), 'w') as init_file:
+            init_file.write(render_to_string('includes/celery_init.py'))
+    {% endif %}

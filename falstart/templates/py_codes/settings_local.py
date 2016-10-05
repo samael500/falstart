@@ -1,4 +1,7 @@
 # Local settings
+{% if SENTRY %}import raven{% endif%}
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Turn debug mode on
 DEBUG = True
@@ -15,6 +18,14 @@ DATABASES = {
     }
 }
 {% endif %}
+
+{% if SENTRY %}
+RAVEN_CONFIG = {
+    'dsn': '<dsn>',
+    'release': raven.fetch_git_sha(BASE_DIR), }
+{% if CELERY %}
+CELERY_RAVEN_DSN = '<dsn>'
+{% endif %}{% endif %}
 
 # # email settings
 # # To create debug email server for your awesome project visit
