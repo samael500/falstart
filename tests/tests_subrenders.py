@@ -32,5 +32,31 @@ class PartialRenderTestCase(FalstartTestCase):
     def test_db_render_app_init(self):
         """ Should check the app init provisioning correct when celery and pg """
         template_name = 'includes/app_init.j2'
-        context = {'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': True}
+        context = {
+            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': True,
+            'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
         self.assertEqualRender(template_name, context, 'app_init.txt')
+
+    def test_db_render_app_init_no_celery(self):
+        """ Should check the app init provisioning correct when no celery and pg """
+        template_name = 'includes/app_init.j2'
+        context = {
+            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': True,
+            'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
+        self.assertEqualRender(template_name, context, 'app_init_no_celery.txt')
+
+    def test_db_render_app_init_no_celery_no_pg(self):
+        """ Should check the app init provisioning correct when no celery and no pg """
+        template_name = 'includes/app_init.j2'
+        context = {
+            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': False,
+            'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
+        self.assertEqualRender(template_name, context, 'app_init_no_celery_no_pg.txt')
+
+    def test_db_render_app_init_no_pg(self):
+        """ Should check the app init provisioning correct when celery and no pg """
+        template_name = 'includes/app_init.j2'
+        context = {
+            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': False,
+            'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
+        self.assertEqualRender(template_name, context, 'app_init_no_pg.txt')

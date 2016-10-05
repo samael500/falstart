@@ -73,9 +73,9 @@ def start_app():
             DATABASES = {
                 'default': {
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': '{{ db_name }}',
-                    'USER': '{{ db_user }}',
-                    'PASSWORD': '{{ db_password }}',
+                    'NAME': 'test_db_name',
+                    'USER': 'test_db_user',
+                    'PASSWORD': '',
                     'HOST': '127.0.0.1',
                 }
             }
