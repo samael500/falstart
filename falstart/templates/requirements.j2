@@ -7,5 +7,6 @@ coverage-badge==0.1.2
 pylama==7.0.7{% if POSTGRES %}
 psycopg2==2.6.1{% endif %}{% if CELERY %}
 Celery==3.1.23{% endif %}{% if REDIS %}
-redis==2.10.5{% endif %}
+redis==2.10.5{% endif %}{% if SENTRY %}
+raven==5.26.0{% endif %}
 {# keep trailing newline #}

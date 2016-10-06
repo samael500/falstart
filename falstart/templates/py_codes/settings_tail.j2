@@ -13,7 +13,9 @@ broker_connection_link = {% if REDIS %}'redis://localhost:6379/0'{% else %}'amqp
 BROKER_URL = CELERY_RESULT_BACKEND = broker_connection_link
 CELERY_ACCEPT_CONTENT = ['json', ]
 {% endif %}
-
+{% if SENTRY %}
+INSTALLED_APPS += ('raven.contrib.django.raven_compat', )
+{% endif %}
 try:
     from settings_local import *  # noqa
 except ImportError:
