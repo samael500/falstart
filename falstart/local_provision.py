@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 
+from textwrap import dedent
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -106,20 +107,17 @@ def start_box():
 
 def falstart_commit():
     """ Try to commit after box start """
-    ignore = (
-        '*.py[cod]',
-        '__pycache__/',
-        '# custom ignore',
-        'settings_local.py',
-        '.vagrant',
-        'var/',
-        'static/',
-        '',
-    )
+    render_template('gitignore.j2', '.gitignore')
+    extra_ignore = dedent('''
+        # custom ignore'
+        settings_local.py
+        .vagrant
+        static/
+    ''')
 
     falstart_print('Update .gitignore')
     with open('.gitignore', 'a') as gitignore:
-        gitignore.write('\n'.join(ignore))
+        gitignore.write(extra_ignore)
 
     for attempt in range(2):
         try:
