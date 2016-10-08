@@ -42,7 +42,9 @@ def python_packages():
         # configuring python 3.4 Makefile
         run('./configure --prefix=/usr/local/python-{{ py_version }}')
         # compiling the python 3.4 source code and install
-        sudo('make && make altinstall #')
+        run('make')
+        sudo('make altinstall')
     sudo('rm /tmp/* -rf')
     # make link to python
     sudo('ln -sf /usr/local/python-{{ py_version }}/bin/* /usr/local/bin/')
+{# keep trailing newline #}
