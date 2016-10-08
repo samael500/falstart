@@ -17,8 +17,9 @@ end
 Vagrant.configure(2) do |config|
   # Virtual machine parameters
   config.vm.box = "#{box_name}"
-
   config.vm.network "private_network", ip: ip_address
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
   if SYNC_FOLDER then
     if ENV['CI_FLAG'] or ENV['NO_NFS'] then
       config.vm.synced_folder ".", "/home/vagrant/proj", type: "rsync"
@@ -26,9 +27,8 @@ Vagrant.configure(2) do |config|
       config.vm.synced_folder ".", "/home/vagrant/proj", type: "nfs",
       :mount_options => ['actimeo=2']
     end
-  else
-    config.vm.synced_folder ".", "/vagrant", disabled: true
   end
+
   config.vm.hostname = hostname
   config.vm.post_up_message = "#{hostname} dev server successfuly started.
     Connect to host with:
