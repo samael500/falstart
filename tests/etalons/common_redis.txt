@@ -26,10 +26,9 @@ def apt_packages():
 def python_packages():
     """ Install python components """
 
-    sudo(
-        'apt-get -y install python-dev python-pip python-virtualenv build-essential '
-        'libncurses5-dev libncursesw5-dev libreadline6-dev libgdbm-dev libsqlite3-dev '
-        'libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev')
+    sudo('apt-get -y install python-dev python-pip python-virtualenv build-essential '
+         'libncurses5-dev libncursesw5-dev libreadline6-dev libgdbm-dev libsqlite3-dev '
+         'libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev')
 
     with cd('/tmp'):
         # download python source code
