@@ -1,4 +1,0 @@
-@sentinel()
-def database():
-    """ Install database tasks """
-    pass

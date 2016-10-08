@@ -2,6 +2,7 @@ import os
 from unittest import TestCase
 from difflib import ndiff
 from jinja2 import Environment, FileSystemLoader
+from zipfile import ZipFile
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -21,13 +22,14 @@ class FalstartTestCase(TestCase):
 
     def assertEqualRender(self, template_name, context, etalon_name):
         """ Open etalon file and check render correct """
-        with open(os.path.join(BASE_DIR, 'tests', 'etalons', etalon_name)) as etalon:
-            rendered = self.render_to_string(template_name, context)
-            corrected = etalon.read()
-            try:
-                self.assertEqual(corrected, rendered)
-            except:
-                print "Etalon: {}".format(etalon_name)
-                for row in ndiff(rendered.split('\n'), corrected.split('\n')):
-                    print row
-                assert False
+        with ZipFile(os.path.join(BASE_DIR, 'tests', 'etalons.zip')) as etalon_zip:
+            with etalon_zip.open(etalon_name) as etalon:
+                rendered = self.render_to_string(template_name, context)
+                corrected = etalon.read()
+                try:
+                    self.assertEqual(corrected, rendered)
+                except:
+                    print "Etalon: {}".format(etalon_name)
+                    for row in ndiff(rendered.split('\n'), corrected.split('\n')):
+                        print row
+                    assert False
