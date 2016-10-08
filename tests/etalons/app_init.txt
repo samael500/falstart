@@ -70,21 +70,42 @@ def start_app():
             }
         '''),
         dedent('''\
-            DATABASES = {
-                'default': {
+            DATABASES = {{
+                'default': {{
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'test_db_name',
-                    'USER': 'test_db_user',
-                    'PASSWORD': '',
+                    'NAME': '{db_name}',
+                    'USER': '{db_user}',
+                    'PASSWORD': '{db_password}',
                     'HOST': '127.0.0.1',
-                }
-            }
-        ''')
+                }}
+            }}
+        '''.format(**VARS))
     )
 
-    settings += render_to_string('includes/settings_tail.py')
+    settings += '''
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static'
+
+TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'
+
+# celery settings
+broker_connection_link = 'amqp://guest:guest@localhost:5672//'
+
+BROKER_URL = CELERY_RESULT_BACKEND = broker_connection_link
+CELERY_ACCEPT_CONTENT = ['json', ]
+
+try:
+    from settings_local import *  # noqa
+except ImportError:
+    pass
+'''
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
 
     with open('{project_name}/__init__.py'.format(**VARS), 'w') as settings_file:
-        settings_file.write(render_to_string('includes/celery_init.py'))
+        settings_file.write('''# This will make sure the app is always imported when
+# Django starts so that shared_task will use this app.
+from .celery import app as celery_app  # noqa
+''')

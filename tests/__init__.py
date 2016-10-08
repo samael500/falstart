@@ -25,8 +25,9 @@ class FalstartTestCase(TestCase):
             rendered = self.render_to_string(template_name, context)
             corrected = etalon.read()
             try:
-                self.assertEqual(rendered, corrected)
+                self.assertEqual(corrected, rendered)
             except:
+                print "Etalon: {}".format(etalon_name)
                 for row in ndiff(rendered.split('\n'), corrected.split('\n')):
                     print row
                 assert False

@@ -70,18 +70,30 @@ def start_app():
             }
         '''),
         dedent('''\
-            DATABASES = {
-                'default': {
+            DATABASES = {{
+                'default': {{
                     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'test_db_name',
-                    'USER': 'test_db_user',
-                    'PASSWORD': '',
+                    'NAME': '{db_name}',
+                    'USER': '{db_user}',
+                    'PASSWORD': '{db_password}',
                     'HOST': '127.0.0.1',
-                }
-            }
-        ''')
+                }}
+            }}
+        '''.format(**VARS))
     )
 
-    settings += render_to_string('includes/settings_tail.py')
+    settings += '''
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static'
+
+TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'
+
+try:
+    from settings_local import *  # noqa
+except ImportError:
+    pass
+'''
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)

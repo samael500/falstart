@@ -60,6 +60,18 @@ def start_app():
         )
     )
 
-    settings += render_to_string('includes/settings_tail.py')
+    settings += '''
+
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static'
+
+TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'
+
+try:
+    from settings_local import *  # noqa
+except ImportError:
+    pass
+'''
     with open('{project_name}/settings.py'.format(**VARS), 'w') as settings_file:
         settings_file.write(settings)
