@@ -2,7 +2,7 @@
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '{{ project_name }}/static'
+STATIC_ROOT = os.path.join(BASE_DIR, '{{ root_dir }}', 'static')
 
 TEST_RUNNER = 'rainbowtests.test.runner.RainbowDiscoverRunner'{% if CELERY %}
 
