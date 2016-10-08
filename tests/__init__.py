@@ -1,5 +1,6 @@
 import os
 from unittest import TestCase
+from difflib import ndiff
 from jinja2 import Environment, FileSystemLoader
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -26,9 +27,6 @@ class FalstartTestCase(TestCase):
             try:
                 self.assertEqual(rendered, corrected)
             except:
-                print ('=== RENDERED RESULT:')
-                print (rendered)
-                print ('=== SHULD BE')
-                print (corrected)
-                print ('===')
-                raise
+                for row in ndiff(rendered.split('\n'), corrected.split('\n')):
+                    print row
+                assert False
