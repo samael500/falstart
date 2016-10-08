@@ -1,0 +1,20 @@
+# Local settings
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# Turn debug mode on
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+# # email settings
+# # To create debug email server for your awesome project visit
+# # https://debugmail.io/ it's easy and nice service for debug your emails
+# EMAIL_HOST = 'debugmail.io'
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = '<user login>'
+# EMAIL_HOST_PASSWORD = '<user password>'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# ADMINS = (
+#     ('<admin name>', '<admin email>'),
+# )
