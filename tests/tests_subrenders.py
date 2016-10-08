@@ -33,7 +33,7 @@ class PartialRenderTestCase(FalstartTestCase):
         """ Should check the app init provisioning correct when celery and pg """
         template_name = 'includes/app_init.j2'
         context = {
-            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': True, 'root_dir': 'example_proj',
+            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': True, 'proj_name': 'example_proj',
             'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
         self.assertEqualRender(template_name, context, 'app_init.txt')
 
@@ -41,7 +41,7 @@ class PartialRenderTestCase(FalstartTestCase):
         """ Should check the app init provisioning correct when no celery and pg """
         template_name = 'includes/app_init.j2'
         context = {
-            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': True, 'root_dir': 'example_proj',
+            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': True, 'proj_name': 'example_proj',
             'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
         self.assertEqualRender(template_name, context, 'app_init_no_celery.txt')
 
@@ -49,7 +49,7 @@ class PartialRenderTestCase(FalstartTestCase):
         """ Should check the app init provisioning correct when no celery and no pg """
         template_name = 'includes/app_init.j2'
         context = {
-            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': False, 'root_dir': 'example_proj',
+            'pyenv_version': 3.1415, 'CELERY': False, 'POSTGRES': False, 'proj_name': 'example_proj',
             'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
         self.assertEqualRender(template_name, context, 'app_init_no_celery_no_pg.txt')
 
@@ -57,7 +57,7 @@ class PartialRenderTestCase(FalstartTestCase):
         """ Should check the app init provisioning correct when celery and no pg """
         template_name = 'includes/app_init.j2'
         context = {
-            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': False, 'root_dir': 'example_proj',
+            'pyenv_version': 3.1415, 'CELERY': True, 'POSTGRES': False, 'proj_name': 'example_proj',
             'db_name': 'test_db_name', 'db_user': 'test_db_user', 'db_pass': 'test_db_pass'}
         self.assertEqualRender(template_name, context, 'app_init_no_pg.txt')
 

@@ -147,5 +147,5 @@ def make_custom_box():
 
 def rmproj():
     """ Remove project """
-    run('cd {root_dir} && vagrant destroy'.format(**VARS))
+    run('cd {root_dir} && vagrant destroy -f'.format(**VARS))
     run('rm {root_dir} -rf'.format(**VARS))
