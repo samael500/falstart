@@ -52,7 +52,7 @@ def from_user(msg, default, validate, yesno=False):
 def read_data(args):
     VARS.update(args)
 
-    proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
+    proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'awesome').lower()))
     VARS['proj_name'] = proj_name or from_user(
         'Enter a project name', proj_name, r'^[a-z]+([a-z]|\d)*$')
     if not VARS.get('root_dir'):
