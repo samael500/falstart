@@ -61,6 +61,9 @@ def read_data(args):
     VARS['dj_version'] = from_user(
         'Django version', VARS.get('dj_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
 
+    VARS['box_name'] = 'debian/{}'.format(from_user(
+        'Debian version (for vagrant box)', VARS.get('box_name', '')[len('debian/'):], r'^\w+'))
+
     while True:
         py_version = from_user(
             'Python version', VARS.get('py_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
