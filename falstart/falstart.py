@@ -52,7 +52,7 @@ def from_user(msg, default, validate, yesno=False):
 def read_data(args):
     VARS.update(args)
 
-    proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'test').lower()))
+    proj_name = ''.join(re.split(r'[^a-z]', (VARS.get('root_dir') or 'awesome').lower()))
     VARS['proj_name'] = proj_name or from_user(
         'Enter a project name', proj_name, r'^[a-z]+([a-z]|\d)*$')
     if not VARS.get('root_dir'):
@@ -60,6 +60,9 @@ def read_data(args):
 
     VARS['dj_version'] = from_user(
         'Django version', VARS.get('dj_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
+
+    VARS['box_name'] = 'debian/{}'.format(from_user(
+        'Debian version (for vagrant box)', VARS.get('box_name', '')[len('debian/'):], r'^\w+'))
 
     while True:
         py_version = from_user(
@@ -74,7 +77,7 @@ def read_data(args):
     VARS['proj_ip'] = from_user(
         'Vagrant box IP-addr', VARS.get('proj_ip'), r'^([0-9]{1,3}\.){3}[0-9]{1,3}$')
 
-    for name in 'POSTGRES', 'CELERY', 'REDIS':
+    for name in 'POSTGRES', 'CELERY', 'REDIS', 'SENTRY':
         VARS[name] = from_user(
             'Do you nead a {}?'.format(name), VARS.get(name, False), r'^[YyNn]{1}$', yesno=True)
 

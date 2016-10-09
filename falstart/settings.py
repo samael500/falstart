@@ -27,4 +27,7 @@ VARS = dict(
     dj_version='1.9.5',
     py_version='3.5.1',
     pyenv_version=None,
+
+    # extra configs
+    SENTRY=False,
 )

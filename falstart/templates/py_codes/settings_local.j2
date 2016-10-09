@@ -1,9 +1,12 @@
-# Local settings
+# Local settings{% if SENTRY %}
+import raven{% endif%}
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Turn debug mode on
 DEBUG = True
-TEMPLATE_DEBUG = True
-{% if POSTGRES %}
+TEMPLATE_DEBUG = True{% if POSTGRES %}
+
 # Database connection
 DATABASES = {
     'default': {
@@ -13,8 +16,13 @@ DATABASES = {
         'PASSWORD': '{{ db_pass }}',
         'HOST': '127.0.0.1',
     }
-}
-{% endif %}
+}{% endif %}{% if SENTRY %}
+
+# # Add project to SENTRY and configure dsn
+# RAVEN_CONFIG = {
+#    'dsn': '<dsn>',
+#    'release': raven.fetch_git_sha(BASE_DIR), }{% if CELERY %}
+# CELERY_RAVEN_DSN = '<dsn>'{% endif %}{% endif %}
 
 # # email settings
 # # To create debug email server for your awesome project visit

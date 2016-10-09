@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 
+from textwrap import dedent
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -84,9 +85,11 @@ def start_box():
     render_template('provision_fabfile.j2', 'provision/fabric_provisioner.py')
     render_template('requirements.j2', 'requirements.txt')
     render_template('requirements.j2', 'requirements-remote.txt')
-    render_template('settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
+    render_template('lintrc.j2', '.lintrc')
+    render_template('coveragerc.j2', '.coveragerc')
+    render_template('py_codes/settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
     if VARS.get('CELERY'):
-        render_template('celery.j2', '{proj_name}/celery.py'.format(**VARS))
+        render_template('py_codes/celery.j2', '{proj_name}/celery.py'.format(**VARS))
     # copy templates for vagrant fabric render
     put(os.path.join(VARS['templates_dir'], 'vagrant_templates'), 'provision/templates')
     try:
@@ -105,20 +108,17 @@ def start_box():
 
 def falstart_commit():
     """ Try to commit after box start """
-    ignore = (
-        '*.py[cod]',
-        '__pycache__/',
-        '# custom ignore',
-        'settings_local.py',
-        '.vagrant',
-        'var/',
-        'static/',
-        '',
-    )
+    render_template('gitignore.j2', '.gitignore')
+    extra_ignore = dedent('''
+        # custom ignore'
+        settings_local.py
+        .vagrant
+        static/
+    ''')
 
     falstart_print('Update .gitignore')
     with open('.gitignore', 'a') as gitignore:
-        gitignore.write('\n'.join(ignore))
+        gitignore.write(extra_ignore)
 
     for attempt in range(2):
         try:
@@ -148,5 +148,5 @@ def make_custom_box():
 
 def rmproj():
     """ Remove project """
-    run('cd {root_dir} && vagrant destroy'.format(**VARS))
+    run('cd {root_dir} && vagrant destroy -f'.format(**VARS))
     run('rm {root_dir} -rf'.format(**VARS))

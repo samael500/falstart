@@ -1,0 +1,49 @@
+def common():
+    """ Common tasks """
+    locale()
+    apt_packages()
+    python_packages()
+
+
+@sentinel()
+def locale():
+    """ Set locale to enviroment """
+    fabric.contrib.files.upload_template(
+        'environment.j2', '/etc/environment',
+        context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
+    sudo('localedef {locale}.{encoding} -i {locale} -f{encoding}'.format(**VARS))
+    # sudo('locale-gen')
+
+
+@sentinel()
+def apt_packages():
+    """ Install common packages """
+    sudo('apt-get -y update')
+    sudo('apt-get -y install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev git{% if REDIS %} redis-server{% endif %}{% if CELERY and not REDIS %} rabbitmq-server{% endif %}')
+
+
+@sentinel()
+def python_packages():
+    """ Install python components """
+
+    sudo('apt-get -y install python-dev python-pip python-virtualenv build-essential '
+         'libncurses5-dev libncursesw5-dev libreadline6-dev libgdbm-dev libsqlite3-dev '
+         'libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev')
+
+    with cd('/tmp'):
+        # download python source code
+        run('wget -O python.tgz https://www.python.org/ftp/python/{{ py_version }}/Python-{{ py_version }}.tgz')
+        # extract python tarball
+        run('tar -xf python.tgz')
+        run('mv Python-{{ py_version }} python')
+
+    with cd('/tmp/python'):
+        # configuring python 3.4 Makefile
+        run('./configure --prefix=/usr/local/python-{{ py_version }}')
+        # compiling the python 3.4 source code and install
+        run('make')
+        sudo('make altinstall')
+    sudo('rm /tmp/* -rf')
+    # make link to python
+    sudo('ln -sf /usr/local/python-{{ py_version }}/bin/* /usr/local/bin/')
+{# keep trailing newline #}
