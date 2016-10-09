@@ -86,6 +86,7 @@ def start_box():
     render_template('requirements.j2', 'requirements.txt')
     render_template('requirements.j2', 'requirements-remote.txt')
     render_template('lintrc.j2', '.lintrc')
+    render_template('coveragerc.j2', '.coveragerc')
     render_template('py_codes/settings_local.j2', '{proj_name}/settings_local.py.example'.format(**VARS))
     if VARS.get('CELERY'):
         render_template('py_codes/celery.j2', '{proj_name}/celery.py'.format(**VARS))
