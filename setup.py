@@ -28,6 +28,8 @@ setup(
     package_data={
         'falstart': [
             'templates/*.j2',
+            'templates/py_codes/*.j2',
+            'templates/includes/*.j2',
             'templates/vagrant_templates/*.j2',
         ]
     },
