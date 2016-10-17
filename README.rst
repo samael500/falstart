@@ -2,6 +2,12 @@
 falstart
 ========
 
+.. image:: https://raw.githubusercontent.com/samael500/falstart/master/fs-logo.png
+    :target: https://github.com/Samael500/falstart
+    :alt: falstart
+
+|
+
 .. image:: https://img.shields.io/travis/Samael500/falstart.svg?maxAge=2592000&style=flat
     :target: https://travis-ci.org/Samael500/falstart
     :alt: build status
