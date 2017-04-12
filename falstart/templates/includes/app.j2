@@ -33,8 +33,9 @@ def localserver():
             User.objects.create_superuser(**{user_data})
         ''').format(**VARS)
 
-        run('echo "{create_user_py}" | {venv_path}/bin/python manage.py shell'.format(
-            create_user_py=create_user_py, **VARS))
+        with fabric.context_managers.settings(warn_only=True):
+            run('echo "{create_user_py}" | {venv_path}/bin/python manage.py shell'.format(
+                create_user_py=create_user_py, **VARS))
         run('mkdir var -p')
 
         # Start{% if CELERY %} celery and{% endif %} runserver
