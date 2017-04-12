@@ -15,7 +15,8 @@ def app():
         if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], 'manage.py')):
             run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
         # Copy settings local
-        run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], VARS['project_name'], 'settings_local.py')):
+            run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
 
 
 def localserver():
