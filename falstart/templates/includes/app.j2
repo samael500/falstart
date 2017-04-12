@@ -5,14 +5,14 @@ def app():
         run('pyvenv-{{ pyenv_version }} {venv_path}'.format(**VARS))
         # Install required python packages with pip from wheels archive
         # make wheels for python packages for first running
-        if not os.path.exists(os.path.join(VARS['root_dir'], 'wheels')):
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], 'wheels')):
             run('{venv_path}/bin/pip install -U pip wheel'.format(**VARS))
             run('mkdir -p wheels')
             run('{venv_path}/bin/pip wheel -w wheels/ -r requirements-remote.txt --pre'.format(**VARS))
         run('make wheel_install')
         # run app tasks for devserver start
         # start django project
-        if not os.path.exists(os.path.join(VARS['root_dir'], 'manage.py')):
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], 'manage.py')):
             run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
         # Copy settings local
         run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
