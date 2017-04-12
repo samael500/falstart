@@ -65,7 +65,7 @@ def read_data(args):
         'Debian version (for vagrant box)', VARS.get('box_name', '')[len('debian/'):], r'^\w+'))
 
     VARS['VAGRANT_NFS'] = from_user(
-        'Do you need a NFS synced folder?', VARS.get('VAGRANT_NFS', True), r'^[YyNn]{1}$', yesno=True)
+        'Do you need a NFS synced folder for vagrant box?', VARS.get('VAGRANT_NFS', True), r'^[YyNn]{1}$', yesno=True)
 
     while True:
         py_version = from_user(
