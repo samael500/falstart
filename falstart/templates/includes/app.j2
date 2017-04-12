@@ -11,6 +11,9 @@ def app():
             run('{venv_path}/bin/pip wheel -w wheels/ -r requirements-remote.txt --pre'.format(**VARS))
         run('make wheel_install')
         # run app tasks for devserver start
+        # start django project
+        if not os.path.exists(os.path.join(VARS['root_dir'], 'manage.py')):
+            run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
         # Copy settings local
         run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
 
