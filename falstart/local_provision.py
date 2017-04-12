@@ -93,8 +93,8 @@ def start_box():
     # copy templates for vagrant fabric render
     put(os.path.join(VARS['templates_dir'], 'vagrant_templates'), 'provision/templates')
     try:
-        # run vagrant up
-        run('vagrant up')
+        env_vars = ('NO_NFS=1 ', '')[bool(VARS.get('VAGRANT_NFS'))]
+        run('{}vagrant up'.format(env_vars))
     except:
         falstart_print('Error occurred when up the vagrant machine.', error=True)
         falstart_print('You can try to manually start the Vagrant.', error=True)
