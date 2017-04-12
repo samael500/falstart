@@ -45,7 +45,11 @@ Vagrant.configure(2) do |config|
   end
   # Virtualbox specific parameters
   config.vm.provider "virtualbox" do |v|
-    v.name = "#{hostname}_vagrant"
+    if ENV['BUILD_NUMBER'] then
+        v.name = "#{hostname}_vagrant_#{ENV['BUILD_NUMBER']}"
+    else
+        v.name = "#{hostname}_vagrant"
+    end
     v.memory = {{ vagrant_memory }}
     v.cpus = {{ vagrant_cpus }}
   end
