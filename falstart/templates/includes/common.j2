@@ -11,7 +11,7 @@ def locale():
     fabric.contrib.files.upload_template(
         'environment.j2', '/etc/environment',
         context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
-    sudo('localedef {locale}.{encoding} -i {locale} -f{encoding}'.format(**VARS))
+    sudo('localedef {locale}.{encoding} -i {locale} -f {encoding}'.format(**VARS))
     # sudo('locale-gen')
 
 

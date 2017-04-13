@@ -4,10 +4,19 @@ def app():
         # Create venv and install requirements
         run('pyvenv-{{ pyenv_version }} {venv_path}'.format(**VARS))
         # Install required python packages with pip from wheels archive
+        # make wheels for python packages for first running
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], 'wheels')):
+            run('{venv_path}/bin/pip install -U pip wheel'.format(**VARS))
+            run('mkdir -p wheels')
+            run('{venv_path}/bin/pip wheel -w wheels/ -r requirements-remote.txt --pre'.format(**VARS))
         run('make wheel_install')
         # run app tasks for devserver start
+        # start django project
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], 'manage.py')):
+            run('{venv_path}/bin/django-admin startproject {project_name} .'.format(**VARS))
         # Copy settings local
-        run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
+        if not fabric.contrib.files.exists(os.path.join(VARS['root_dir'], VARS['project_name'], 'settings_local.py')):
+            run('cd {project_name} && cp settings_local.py.example settings_local.py'.format(**VARS))
 
 
 def localserver():
@@ -24,8 +33,9 @@ def localserver():
             User.objects.create_superuser(**{user_data})
         ''').format(**VARS)
 
-        run('echo "{create_user_py}" | {venv_path}/bin/python manage.py shell'.format(
-            create_user_py=create_user_py, **VARS))
+        with fabric.context_managers.settings(warn_only=True):
+            run('echo "{create_user_py}" | {venv_path}/bin/python manage.py shell'.format(
+                create_user_py=create_user_py, **VARS))
         run('mkdir var -p')
 
         # Start{% if CELERY %} celery and{% endif %} runserver

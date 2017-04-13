@@ -7,6 +7,8 @@ def nginx():
         context=VARS, use_jinja=True, backup=False, use_sudo=True, template_dir=VARS['templates_dir'])
     # make s-link to enabled sites
     sudo('ln -sf /etc/nginx/sites-available/{project_name} /etc/nginx/sites-enabled/{project_name}'.format(**VARS))
+    # remove default nginx config
+    sudo('rm -f /etc/nginx/sites-*/default')
     # restart nginx
     sudo('service nginx restart')
 

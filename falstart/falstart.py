@@ -64,6 +64,9 @@ def read_data(args):
     VARS['box_name'] = 'debian/{}'.format(from_user(
         'Debian version (for vagrant box)', VARS.get('box_name', '')[len('debian/'):], r'^\w+'))
 
+    VARS['VAGRANT_NFS'] = from_user(
+        'Do you need a NFS synced folder for vagrant box?', VARS.get('VAGRANT_NFS', True), r'^[YyNn]{1}$', yesno=True)
+
     while True:
         py_version = from_user(
             'Python version', VARS.get('py_version'), r'^([0-9]{1,2}\.){1,2}[0-9]{1,2}$')
@@ -79,7 +82,7 @@ def read_data(args):
 
     for name in 'POSTGRES', 'CELERY', 'REDIS', 'SENTRY':
         VARS[name] = from_user(
-            'Do you nead a {}?'.format(name), VARS.get(name, False), r'^[YyNn]{1}$', yesno=True)
+            'Do you need a {}?'.format(name), VARS.get(name, False), r'^[YyNn]{1}$', yesno=True)
 
     if VARS.get('POSTGRES'):
         for name in ('db_name', 'db_user', 'db_pass'):
